@@ -27,7 +27,6 @@
             --border-radius: 20px;
             --shadow: 0 10px 30px rgba(0, 51, 160, 0.15);
             --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            --glow-blue: 0 0 15px rgba(0, 51, 160, 0.6);
         }
 
         * {
@@ -37,7 +36,8 @@
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
+            /* CAMBIO DE FUENTE GLOBAL A TAHOMA */
+            font-family: 'Tahoma', sans-serif;
             background-color: var(--white);
             color: var(--dark);
             overflow-x: hidden;
@@ -45,7 +45,8 @@
         }
 
         h1, h2, h3, h4 {
-            font-family: 'Montserrat', sans-serif;
+            /* CAMBIO DE FUENTE A TAHOMA */
+            font-family: 'Tahoma', sans-serif;
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: -1px;
@@ -77,19 +78,28 @@
         /* --- HEADER --- */
         header {
             position: fixed; top: 0; left: 0; width: 100%; height: 80px;
-            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px);
+            /* Fondo mucho más transparente (0.7) con blur intenso para efecto vidrio */
+            background: rgba(255, 255, 255, 0.7); 
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px); /* Soporte Safari */
             z-index: 1000; display: flex; justify-content: space-between; align-items: center;
             padding: 0 5%; box-shadow: 0 4px 30px rgba(0,0,0,0.05);
-            border-bottom: 2px solid rgba(0, 51, 160, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .header-logo { display: flex; align-items: center; gap: 15px; }
-        .logo-placeholder {
-            width: 50px; height: 50px;
-            background: linear-gradient(135deg, var(--blue), var(--dark));
-            color: var(--white); border-radius: 50%;
-            display: flex; justify-content: center; align-items: center;
-            font-weight: bold; font-size: 10px; border: 2px solid var(--yellow);
+        
+        /* Estilo para la imagen del logo en el header */
+        .header-logo-img {
+            height: 60px; /* Tamaño ajustado para el header */
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+            transition: transform 0.3s ease;
+        }
+
+        .header-logo-img:hover {
+            transform: scale(1.1);
         }
 
         .nav-menu { display: flex; gap: 30px; }
@@ -112,27 +122,62 @@
 
         /* --- WRAPPER OSCURO (Hero + Perfil) --- */
         .dark-section-wrapper {
-            /* Degradado Azul Marino Profundo */
-            background: linear-gradient(to bottom, #001020 0%, #00264d 100%);
-            padding-bottom: 50px;
+            /* Degradado: Azul Marino Profundo -> Azul Cerúleo Hermoso */
+            background: linear-gradient(to bottom, #001020 0%, #001f3f 40%, #007BA7 100%);
+            padding-bottom: 80px;
             position: relative;
-        }
-
-        /* --- 2. HERO SECTION --- */
-        .hero {
-            position: relative; height: 100vh;
-            display: flex; align-items: center; justify-content: center;
-            background: transparent; /* Transparente para usar el wrapper */
-            overflow: hidden; padding-top: 80px;
+            overflow: hidden;
         }
 
         /* Shapes (Ajustadas para fondo oscuro) */
-        .shape { position: absolute; border-radius: 50%; filter: blur(80px); z-index: 1; opacity: 0.4; animation: float 8s ease-in-out infinite; }
-        .shape-1 { width: 500px; height: 500px; background: radial-gradient(circle, var(--yellow), transparent); top: -10%; left: -10%; }
-        .shape-2 { width: 600px; height: 600px; background: radial-gradient(circle, var(--blue), transparent); bottom: -15%; right: -15%; animation-delay: 2s; }
+        .shape { position: absolute; border-radius: 50%; filter: blur(80px); z-index: 0; opacity: 0.3; animation: float 8s ease-in-out infinite; }
+        .shape-1 { width: 500px; height: 500px; background: radial-gradient(circle, var(--yellow), transparent); top: -10%; right: -10%; }
+        .shape-2 { width: 600px; height: 600px; background: radial-gradient(circle, var(--blue), transparent); bottom: 10%; left: -15%; animation-delay: 2s; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
 
-        .hero-content { z-index: 2; text-align: center; max-width: 900px; padding: 20px; }
+
+        /* --- 2. HERO SECTION --- */
+        .hero {
+            position: relative;
+            min-height: 100vh; /* Asegura altura completa */
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            background: transparent;
+            padding-top: 100px; /* Espacio para el header */
+            padding-bottom: 50px;
+        }
+
+        .hero-layout {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 1300px; /* Un poco más ancho para acomodar la foto gigante */
+            padding: 0 20px;
+            z-index: 2;
+        }
+
+        .hero-text-side {
+            flex: 1;
+            /* ALINEACIÓN A LA DERECHA */
+            text-align: right; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end; /* Alinea los elementos hijos (como el lema) a la derecha */
+            padding-left: 20px;
+            padding-right: 20px;
+            z-index: 3;
+        }
+
+        .hero-image-side {
+            flex: 1.2; /* Darle más espacio a la imagen */
+            display: flex;
+            justify-content: flex-start; /* Alinear imagen a la izquierda */
+            align-items: flex-end; /* Alinear abajo */
+            position: relative;
+        }
 
         /* Efecto Oro Diagonal */
         .gold-diagonal {
@@ -145,26 +190,66 @@
         @keyframes goldFlow { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
         .gold-diagonal:hover { filter: brightness(1.3) drop-shadow(0 0 10px rgba(255, 215, 0, 0.8)); transform: scale(1.02); cursor: default; }
 
-        .hero-name { font-size: 9rem; line-height: 1; margin-bottom: 10px; font-weight: 900; }
-        .hero-subtitle { font-size: 3.5rem; margin-bottom: 30px; display: block; font-weight: 400; }
+        .hero-name { 
+            font-size: 7rem; /* Ajustado para layout lado a lado */
+            line-height: 0.9; 
+            margin-bottom: 10px; 
+            font-weight: 900; 
+            font-family: 'Tahoma', sans-serif; /* APLICAR TAHOMA ESPECÍFICAMENTE */
+            /* Extra Thick Stroke Effect simulation via text-shadow or font */
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .hero-subtitle { 
+            font-size: 2.5rem; 
+            margin-bottom: 30px; 
+            display: block; 
+            font-weight: 400; 
+        }
 
         .hero-motto {
-            font-size: 1.5rem; font-weight: 300; color: var(--dark);
-            background: rgba(255,255,255,0.9); /* Más opacidad para contraste */
-            backdrop-filter: blur(10px); padding: 12px 30px;
+            font-size: 1.2rem; font-weight: 300; color: var(--dark);
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px); padding: 15px 30px;
             border-radius: 50px; display: inline-block;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-width: 90%;
+            /* Asegurar que el texto dentro de la cápsula se vea bien */
+            text-align: center; 
         }
 
         .hero-img-container {
-            width: 320px; height: 320px; margin: 0 auto;
-            border-radius: 50%; border: 8px solid white;
-            box-shadow: 0 0 50px rgba(255, 255, 255, 0.1);
-            overflow: hidden; animation: zoomInHero 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            background: var(--gray-light); margin-bottom: 20px;
+            width: 100%;
+            max-width: 750px; /* FOTO GIGANTESCA */
+            height: auto;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            border-radius: 0;
+            overflow: visible;
+            /* Cambiada animación para entrar desde la izquierda */
+            animation: slideInLeft 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.15));
         }
-        .hero-img-container img { width: 100%; height: 100%; object-fit: cover; }
-        @keyframes zoomInHero { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        
+        .hero-img-container img { 
+            width: 100%; 
+            height: auto; 
+            object-fit: contain; 
+            /* Difuminado suave abajo para que no se vea raro el corte */
+            mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
 
         /* --- 3. SECCIONES --- */
         .section { padding: 100px 10%; position: relative; }
@@ -172,25 +257,71 @@
         .section-title span { color: var(--blue); }
 
         /* --- PERFIL --- */
-        #perfil { background: transparent; } /* Transparente para ver el degradado oscuro */
+        #perfil { background: transparent; } /* Transparente para ver el degradado azul cerúleo */
         
-        .profile-container {
-            display: flex; gap: 50px; align-items: center;
-            background: rgba(255, 255, 255, 0.95); /* Tarjeta clara sobre fondo oscuro */
-            padding: 50px; border-radius: var(--border-radius);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5); border-left: 10px solid var(--yellow);
+        /* BORDE ANIMADO COMÚN */
+        .animated-border-wrapper {
+            position: relative;
+            background: transparent;
+            border-radius: var(--border-radius);
+            padding: 3px; /* Grosor del borde */
+            overflow: hidden;
+            --border-color: var(--yellow);
         }
-        .tag {
-            background: var(--gray-light); box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            padding: 8px 15px; border-radius: 20px; color: var(--blue); font-weight: bold;
-            display: inline-block; margin: 5px;
+
+        .animated-border-wrapper::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(from 0deg, transparent, transparent, var(--border-color), transparent, transparent);
+            animation: rotateBorder 4s linear infinite;
+            z-index: 0;
+        }
+
+        /* Estilo específico para la Tarjeta de Perfil */
+        .profile-card-inner {
+            position: relative;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 50px; 
+            border-radius: 17px; /* un poco menos que el wrapper (20px) */
+            display: flex; gap: 50px; align-items: center;
+            z-index: 1;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+        }
+
+        .profile-container {
+            /* Ahora es solo el wrapper para el borde */
+            border-radius: var(--border-radius);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5); 
+        }
+
+        /* Estilo específico para los Tags */
+        .values-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+        
+        .tag-wrapper {
+            display: inline-block;
+            border-radius: 20px;
+            padding: 2px; /* Borde fino para tags */
+            --border-color: var(--yellow);
+        }
+        
+        .tag-inner {
+            position: relative; z-index: 1;
+            background: var(--white);
+            padding: 8px 15px; 
+            border-radius: 18px; 
+            color: var(--blue); font-weight: bold; font-size: 0.9rem;
+            transition: 0.3s;
+        }
+        
+        .tag-wrapper:hover .tag-inner {
+            background: var(--yellow);
+            color: var(--dark);
         }
 
         /* --- 4. PROPUESTAS --- */
         .proposals-section {
-            background-color: #fffde7;
-            background-image: radial-gradient(#FFD700 1px, transparent 1px);
-            background-size: 30px 30px;
+            /* DEGRADADO SOLICITADO: #F7DE03 Sólido casi hasta el final, luego a Blanco */
+            background: linear-gradient(to bottom, #F7DE03 0%, #F7DE03 90%, #FFFFFF 100%);
+            /* Eliminé los puntos para que el color amarillo resalte más limpio */
         }
 
         .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 40px; }
@@ -220,6 +351,14 @@
             font-size: 3rem; margin-bottom: 20px;
             background: -webkit-linear-gradient(45deg, var(--blue), var(--red));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            /* ANIMACIÓN HOVER ICONOS */
+            display: inline-block;
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        /* Efecto al pasar el mouse por la tarjeta */
+        .card-wrapper:hover .p-icon {
+            transform: scale(1.3) rotate(15deg);
         }
 
         /* Animation for Hidden Proposals */
@@ -228,7 +367,11 @@
         @keyframes fadeInSmooth { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         /* --- 5. PLAN DE ACCIÓN --- */
-        /* ... existing styles ... */
+        /* Ajuste específico: Fondo Azul Celeste para las tarjetas del Plan */
+        #plan .proposal-card-inner {
+            background: linear-gradient(135deg, #E1F5FE 0%, #81D4FA 100%); /* Celeste Vibrante */
+            border: 1px solid rgba(255, 255, 255, 0.5); /* Borde sutil */
+        }
 
         /* --- 6. GALERÍA --- */
         #galeria {
@@ -238,6 +381,22 @@
         }
         #galeria .section-title { color: var(--white); }
         #galeria .section-title span { color: var(--yellow); text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+
+        .gallery-grid {
+            display: grid; 
+            /* GAP aumentado */
+            gap: 60px; 
+            padding-bottom: 20px;
+            /* GRID DE 2x3 (3 Columnas en PC) */
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+        
+        /* En pantallas grandes forzamos 3 columnas para que sea 2x3 */
+        @media (min-width: 1024px) {
+            .gallery-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
 
         .gallery-card-wrapper {
             height: 280px; padding: 4px; --border-color: var(--yellow); background: transparent;
@@ -254,76 +413,68 @@
         .gallery-card-wrapper:hover .gallery-overlay { opacity: 1; }
         .gallery-text { color: var(--yellow); font-weight: bold; font-size: 1.4rem; text-transform: uppercase; }
 
-        /* --- 7. FINAL CTA (Modificado) --- */
+        /* Estilos para la Última Tarjeta (Fuera del Grid) */
+        .final-card-title {
+            text-align: center;
+            font-size: 3rem;
+            color: var(--yellow);
+            margin: 20px 0 30px 0;
+            text-transform: uppercase;
+            font-weight: 900;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            line-height: 1.2;
+        }
+
+        .final-card-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            padding-bottom: 60px; /* Separación con el botón */
+        }
+
+        /* Tarjeta ancha */
+        .final-card-wrapper {
+            width: 90%; /* Casi todo el ancho */
+            max-width: 1000px;
+            height: 300px; 
+            padding: 4px;
+            --border-color: var(--yellow);
+            background: transparent;
+        }
+
+        /* --- 7. FINAL CTA --- */
         #vota {
             background-color: var(--blue);
             color: white;
-            padding: 180px 0; text-align: center;
+            padding: 100px 0 180px 0; 
+            text-align: center;
         }
         
-        #vota .section-title {
-             color: white; text-align: center; margin-bottom: 50px;
-        }
+        #vota .section-title { color: white; text-align: center; margin-bottom: 50px; }
 
-        /* Wrapper del Botón para el efecto de borde giratorio */
         .btn-wrapper {
-            display: inline-block;
-            position: relative;
-            padding: 5px; /* Espacio para el borde */
-            border-radius: 110px;
-            overflow: hidden;
-            background: transparent;
-            z-index: 1;
+            display: inline-block; position: relative; padding: 5px; border-radius: 110px;
+            overflow: hidden; background: transparent; z-index: 1;
         }
 
-        /* Efecto de borde giratorio (Pseudo-elemento en el wrapper) */
         .btn-wrapper::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
             background: conic-gradient(from 0deg, transparent, transparent, var(--yellow), transparent, transparent);
-            animation: rotateBorder 4s linear infinite;
-            opacity: 0; /* Oculto por defecto */
-            transition: opacity 0.6s ease;
-            z-index: -1;
+            animation: rotateBorder 4s linear infinite; opacity: 0; transition: opacity 0.6s ease; z-index: -1;
         }
 
-        /* Mostrar borde al hacer hover en el botón o wrapper */
-        .btn-wrapper:hover::before {
-            opacity: 1;
-        }
+        .btn-wrapper:hover::before { opacity: 1; }
 
         .btn-mega-giant {
-            display: block; /* Ocupar espacio del wrapper */
-            padding: 40px 100px;
-            font-size: 3.5rem; font-weight: 900;
-            color: var(--white);
-            
-            /* Estado Inicial: ROJO */
-            background: var(--red); 
-            
-            border-radius: 100px;
-            text-transform: uppercase; letter-spacing: 3px;
-            border: none;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            cursor: pointer;
-            
-            /* Transición MUY SUAVE */
-            transition: background-color 0.8s cubic-bezier(0.25, 0.8, 0.25, 1), 
-                        color 0.8s ease, 
-                        transform 0.4s ease, 
-                        box-shadow 0.8s ease;
-                        
-            position: relative;
-            z-index: 2;
+            display: block; padding: 40px 100px; font-size: 3.5rem; font-weight: 900; color: var(--white);
+            background: var(--red); border-radius: 100px; text-transform: uppercase; letter-spacing: 3px;
+            border: none; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); cursor: pointer;
+            transition: background-color 0.8s cubic-bezier(0.25, 0.8, 0.25, 1), color 0.8s ease, transform 0.4s ease, box-shadow 0.8s ease;
+            position: relative; z-index: 2;
         }
 
         .btn-wrapper:hover .btn-mega-giant {
-            /* Estado Hover: AMARILLO */
-            background: var(--yellow);
-            color: var(--blue); /* Contraste */
-            
-            transform: scale(1.02);
+            background: var(--yellow); color: var(--blue); transform: scale(1.02);
             box-shadow: 0 30px 80px rgba(255, 215, 0, 0.4);
         }
 
@@ -334,10 +485,27 @@
         }
         .footer-left, .footer-center, .footer-right { flex: 1; display: flex; }
         .footer-left { justify-content: flex-start; } .footer-center { justify-content: center; text-align: center; } .footer-right { justify-content: flex-end; }
+        
+        /* Ajuste logo footer para contener imagen */
         .footer-logo-box, .footer-photo-box {
-            width: 100px; height: 100px; background: #333; border-radius: 50%;
+            width: 100px; height: 100px; background: #fff; border-radius: 50%;
             display: flex; align-items: center; justify-content: center; border: 3px solid var(--yellow); font-size: 0.8rem; color: #777;
+            overflow: hidden; /* Para que la imagen no se salga del círculo */
         }
+        
+        .footer-logo-box img, .footer-photo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ajuste para fotos */
+            padding: 0;
+        }
+        
+        /* Ajuste específico para el logo que necesita padding */
+        .footer-logo-box img {
+            object-fit: contain;
+            padding: 5px;
+        }
+
         .footer-info h4 { color: var(--yellow); margin-bottom: 10px; font-size: 1.5rem; }
         .footer-info p { color: #ccc; }
 
@@ -351,12 +519,38 @@
         .lightbox-content { max-width: 90%; max-height: 90%; border-radius: 10px; }
         .lightbox-close { position: absolute; top: 30px; right: 30px; color: white; font-size: 3rem; cursor: pointer; }
 
+        /* RESPONSIVE */
+        @media (max-width: 992px) {
+            .hero-layout { 
+                flex-direction: column; /* En móvil, columna */
+                text-align: center; 
+            }
+            .hero-text-side { 
+                order: 2; /* Texto abajo en móvil */
+                padding-left: 0; 
+                margin-top: -40px; /* Subir un poco el texto para conectar con la foto */
+                text-align: center; 
+                align-items: center; /* Centrar texto en móvil */
+            }
+            .hero-image-side {
+                order: 1; /* Foto arriba en móvil */
+                justify-content: center;
+                width: 100%;
+            }
+            .hero-img-container {
+                max-width: 400px; /* Tamaño controlado en móvil */
+            }
+            .hero-name { font-size: 5rem; }
+            .hero-subtitle { font-size: 2rem; }
+            .profile-card-inner { flex-direction: column; text-align: center; padding: 30px; }
+        }
         @media (max-width: 768px) {
             .hero-name { font-size: 4rem; }
-            .hero-subtitle { font-size: 1.5rem; }
             .btn-mega-giant { font-size: 1.5rem; padding: 20px 40px; }
             footer { flex-direction: column; gap: 30px; }
             .footer-left, .footer-center, .footer-right { width: 100%; justify-content: center; }
+            
+            .final-card-title { font-size: 2rem; }
         }
     </style>
 </head>
@@ -371,8 +565,9 @@
     <!-- 1. HEADER -->
     <header>
         <div class="header-logo">
-            <div class="logo-placeholder">LOGO</div>
-            <h3>INSA</h3>
+            <!-- LOGO IMAGEN AQUÍ -->
+            <img src="insa.png" alt="Logo INSA" class="header-logo-img">
+            <h3 style="margin-left: 10px; color: var(--blue);">INSA</h3>
         </div>
         <nav>
             <ul class="nav-menu">
@@ -385,49 +580,77 @@
         </nav>
         <div class="header-cta">
             <div class="candidate-thumb">
-                <img src="https://via.placeholder.com/150/0033A0/FFFFFF?text=D" alt="Dustin">
+                <!-- FOTO MINIATURA -->
+                <img src="dustin1.jpg" alt="Dustin">
             </div>
             <button class="btn-vote-sm">Vota por mí</button>
         </div>
     </header>
 
-    <!-- WRAPPER OSCURO PARA HERO Y PERFIL -->
+    <!-- WRAPPER OSCURO CONTINUO (HERO + PERFIL) -->
     <div class="dark-section-wrapper">
         
+        <!-- Shapes de Fondo -->
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+
         <!-- 2. HERO -->
         <section id="inicio" class="hero">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-
-            <div class="hero-content">
-                <div class="hero-img-container">
-                    <img src="https://via.placeholder.com/500/0033A0/FFFFFF?text=FOTO+CANDIDATO" alt="Dustin Candidato">
+            <div class="hero-layout">
+                
+                <!-- Lado Izquierdo: Foto Gigante Transparente -->
+                <div class="hero-image-side">
+                    <div class="hero-img-container">
+                        <!-- FOTO PRINCIPAL -->
+                        <img src="dustin1.jpg" alt="Dustin Candidato">
+                    </div>
                 </div>
-                
-                <div class="hero-name gold-diagonal">DUSTIN</div>
-                <div class="hero-subtitle gold-diagonal">PERSONERO INSA 2026</div>
-                
-                <h2 class="hero-motto">“EJEMPLO DE BONDAD, DISCIPLINA Y CIENCIA”</h2>
+
+                <!-- Lado Derecho: Texto -->
+                <div class="hero-text-side">
+                    <div class="hero-name gold-diagonal">DUSTIN</div>
+                    <div class="hero-subtitle gold-diagonal">PERSONERO INSA 2026</div>
+                    <h2 class="hero-motto">“EJEMPLO DE BONDAD, DISCIPLINA Y CIENCIA”</h2>
+                </div>
+
             </div>
         </section>
 
         <!-- 3. PERFIL -->
         <section id="perfil" class="section">
-            <div class="profile-container reveal-up">
-                <div class="profile-text">
-                    <h2 class="section-title slide-in-left">¿Quién es <span>Dustin</span>?</h2>
-                    <p>
-                        Soy un estudiante que ha demostrado con hechos su compromiso con la excelencia, la disciplina y el servicio. Durante mis once años en el INSA he estado de manera consecutiva en el cuadro de honor desde kínder, he ganado dos veces las olimpiadas matemáticas y tres veces el concurso bíblico.
-                    </p>
-                    <br>
-                    <div class="values-tags">
-                        <span class="tag">#Liderazgo</span>
-                        <span class="tag">#Excelencia</span>
-                        <span class="tag">#Disciplina</span>
-                        <span class="tag">#Confianza</span>
-                        <span class="tag">#Cercanía</span>
+            <div class="reveal-up">
+                
+                <!-- Wrapper con Borde Animado para la Tarjeta de Perfil -->
+                <div class="animated-border-wrapper profile-container">
+                    <div class="profile-card-inner">
+                        <div class="profile-text">
+                            <h2 class="section-title slide-in-left" style="margin-bottom: 20px;">¿Quién es <span>Dustin</span>?</h2>
+                            <p style="font-size: 1.1rem; line-height: 1.8;">
+                                Soy un estudiante que ha demostrado con hechos su compromiso con la excelencia, la disciplina y el servicio. Durante mis once años en el INSA he estado de manera consecutiva en el cuadro de honor desde kínder, he ganado dos veces las olimpiadas matemáticas y tres veces el concurso bíblico.
+                            </p>
+                            <br>
+                            <!-- Etiquetas con Borde Animado Individual -->
+                            <div class="values-tags">
+                                <div class="animated-border-wrapper tag-wrapper">
+                                    <div class="tag-inner">#Liderazgo</div>
+                                </div>
+                                <div class="animated-border-wrapper tag-wrapper">
+                                    <div class="tag-inner">#Excelencia</div>
+                                </div>
+                                <div class="animated-border-wrapper tag-wrapper">
+                                    <div class="tag-inner">#Disciplina</div>
+                                </div>
+                                <div class="animated-border-wrapper tag-wrapper">
+                                    <div class="tag-inner">#Confianza</div>
+                                </div>
+                                <div class="animated-border-wrapper tag-wrapper">
+                                    <div class="tag-inner">#Cercanía</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
             </div>
         </section>
 
@@ -535,22 +758,80 @@
     <!-- 6. GALERÍA -->
     <section id="galeria" class="section">
         <h2 class="section-title slide-in-left">Si votas por <span>Dustin...</span></h2>
+        
+        <!-- GRID DE 2x3 (6 Tarjetas) -->
         <div class="gallery-grid">
-            <div class="card-wrapper gallery-card-wrapper reveal-up delay-100"><div class="gallery-item" onclick="openModal('https://via.placeholder.com/800x600/0033A0/FFFFFF?text=Liderazgo')"><img src="https://via.placeholder.com/400x300/0033A0/FFFFFF?text=Liderazgo" alt="Galeria"><div class="gallery-overlay"><div class="gallery-text">Liderazgo</div></div></div></div>
-            <div class="card-wrapper gallery-card-wrapper reveal-up delay-200"><div class="gallery-item" onclick="openModal('https://via.placeholder.com/800x600/FFFFFF/CE1126?text=Deportes')"><img src="https://via.placeholder.com/400x300/FFFFFF/CE1126?text=Deportes" alt="Galeria"><div class="gallery-overlay"><div class="gallery-text">Deportes</div></div></div></div>
-            <div class="card-wrapper gallery-card-wrapper reveal-up delay-300"><div class="gallery-item" onclick="openModal('https://via.placeholder.com/800x600/FFD700/000000?text=Ciencia')"><img src="https://via.placeholder.com/400x300/FFD700/000000?text=Ciencia" alt="Galeria"><div class="gallery-overlay"><div class="gallery-text">Ciencia</div></div></div></div>
-            <div class="card-wrapper gallery-card-wrapper reveal-up delay-100"><div class="gallery-item" onclick="openModal('https://via.placeholder.com/800x600/2ecc71/FFFFFF?text=Integracion')"><img src="https://via.placeholder.com/400x300/2ecc71/FFFFFF?text=Integracion" alt="Galeria"><div class="gallery-overlay"><div class="gallery-text">Integración</div></div></div></div>
-            <div class="card-wrapper gallery-card-wrapper reveal-up delay-200"><div class="gallery-item" onclick="openModal('https://via.placeholder.com/800x600/e67e22/FFFFFF?text=Cultura')"><img src="https://via.placeholder.com/400x300/e67e22/FFFFFF?text=Cultura" alt="Galeria"><div class="gallery-overlay"><div class="gallery-text">Cultura</div></div></div></div>
-            <div class="card-wrapper gallery-card-wrapper reveal-up delay-300"><div class="gallery-item" onclick="openModal('https://via.placeholder.com/800x600/9b59b6/FFFFFF?text=Excelencia')"><img src="https://via.placeholder.com/400x300/9b59b6/FFFFFF?text=Excelencia" alt="Galeria"><div class="gallery-overlay"><div class="gallery-text">Excelencia</div></div></div></div>
+            
+            <!-- 1. INTERCLASES -->
+            <div class="card-wrapper gallery-card-wrapper reveal-up delay-100">
+                <div class="gallery-item" onclick="openModal('https://via.placeholder.com/800x600/CE1126/FFFFFF?text=Interclases')">
+                    <img src="https://via.placeholder.com/400x300/CE1126/FFFFFF?text=Interclases" alt="Interclases">
+                    <div class="gallery-overlay"><div class="gallery-text">INTERCLASES</div></div>
+                </div>
+            </div>
+
+            <!-- 2. RADIO INSA -->
+            <div class="card-wrapper gallery-card-wrapper reveal-up delay-200">
+                <div class="gallery-item" onclick="openModal('https://via.placeholder.com/800x600/0033A0/FFFFFF?text=Radio+INSA')">
+                    <img src="https://via.placeholder.com/400x300/0033A0/FFFFFF?text=Radio+INSA" alt="Radio INSA">
+                    <div class="gallery-overlay"><div class="gallery-text">RADIO INSA</div></div>
+                </div>
+            </div>
+
+            <!-- 3. GALERIA DE ARTE -->
+            <div class="card-wrapper gallery-card-wrapper reveal-up delay-300">
+                <div class="gallery-item" onclick="openModal('https://via.placeholder.com/800x600/FFD700/000000?text=Galeria+Arte')">
+                    <img src="https://via.placeholder.com/400x300/FFD700/000000?text=Galeria+Arte" alt="Galeria de Arte">
+                    <div class="gallery-overlay"><div class="gallery-text">GALERÍA DE ARTE</div></div>
+                </div>
+            </div>
+            
+            <!-- 4. FERIA DE CIENCIAS -->
+            <div class="card-wrapper gallery-card-wrapper reveal-up delay-100">
+                <div class="gallery-item" onclick="openModal('https://via.placeholder.com/800x600/2ecc71/FFFFFF?text=Ciencias')">
+                    <img src="https://via.placeholder.com/400x300/2ecc71/FFFFFF?text=Ciencias" alt="Feria de Ciencias">
+                    <div class="gallery-overlay"><div class="gallery-text">FERIA DE CIENCIAS</div></div>
+                </div>
+            </div>
+
+            <!-- 5. JUEGOS TRADICIONALES -->
+            <div class="card-wrapper gallery-card-wrapper reveal-up delay-200">
+                <div class="gallery-item" onclick="openModal('https://via.placeholder.com/800x600/e67e22/FFFFFF?text=Juegos+Tradicionales')">
+                    <img src="https://via.placeholder.com/400x300/e67e22/FFFFFF?text=Juegos+Tradicionales" alt="Juegos Tradicionales">
+                    <div class="gallery-overlay"><div class="gallery-text">JUEGOS TRADICIONALES</div></div>
+                </div>
+            </div>
+
+            <!-- 6. MÁS CONCIERTOS -->
+            <div class="card-wrapper gallery-card-wrapper reveal-up delay-300">
+                <div class="gallery-item" onclick="openModal('https://via.placeholder.com/800x600/9b59b6/FFFFFF?text=Conciertos')">
+                    <img src="https://via.placeholder.com/400x300/9b59b6/FFFFFF?text=Conciertos" alt="Más Conciertos">
+                    <div class="gallery-overlay"><div class="gallery-text">MÁS CONCIERTOS</div></div>
+                </div>
+            </div>
+
         </div>
+
+        <!-- 7. TÍTULO SOLO (SE QUEDA AQUÍ) -->
+        <h3 class="final-card-title reveal-up" style="margin-bottom: 0; padding-bottom: 40px;">Y MUCHO MÁS...<br>SI VOTAS POR DUSTIN</h3>
+
     </section>
 
     <!-- 7. FINAL CTA -->
     <section id="vota" class="final-cta">
         <div class="cta-content section">
-            <h2 class="section-title slide-in-left" style="text-align:center;">¿LISTO PARA EL CAMBIO?</h2>
-            <br>
-            <!-- Wrapper para efecto de borde giratorio -->
+            <h2 class="section-title slide-in-left" style="text-align:center; margin-bottom: 40px;">¿LISTO PARA EL CAMBIO?</h2>
+            
+            <!-- TARJETA SORPRESAS (MOVIDA AQUÍ) -->
+            <div class="final-card-container reveal-up delay-200">
+                 <div class="card-wrapper gallery-card-wrapper final-card-wrapper">
+                    <div class="gallery-item" onclick="openModal('https://via.placeholder.com/1200x600/1a1a1a/FFD700?text=Sorpresas')">
+                        <img src="https://via.placeholder.com/1200x600/1a1a1a/FFD700?text=Sorpresas" alt="Y mucho más">
+                        <div class="gallery-overlay"><div class="gallery-text"></div></div>
+                    </div>
+                </div>
+            </div>
+
             <div class="btn-wrapper">
                 <button class="btn-mega-giant">VOTA POR DUSTIN</button>
             </div>
@@ -560,7 +841,10 @@
     <!-- 9. FOOTER -->
     <footer>
         <div class="footer-left">
-            <div class="footer-logo-box">LOGO</div>
+            <!-- LOGO FOOTER -->
+            <div class="footer-logo-box">
+                <img src="insa.png" alt="Logo INSA">
+            </div>
         </div>
         <div class="footer-center">
             <div class="footer-info">
@@ -570,7 +854,10 @@
             </div>
         </div>
         <div class="footer-right">
-            <div class="footer-photo-box">FOTO</div>
+            <!-- FOTO FOOTER -->
+            <div class="footer-photo-box">
+                <img src="dustin1.jpg" alt="Dustin">
+            </div>
         </div>
     </footer>
 
