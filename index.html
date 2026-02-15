@@ -35,17 +35,22 @@
             box-sizing: border-box;
         }
 
+        html {
+            /* SCROLL SUAVE NATIVO */
+            scroll-behavior: smooth;
+            /* Compensación para el header fijo */
+            scroll-padding-top: 100px; 
+        }
+
         body {
-            /* CAMBIO DE FUENTE GLOBAL A TAHOMA */
+            /* FUENTE TAHOMA */
             font-family: 'Tahoma', sans-serif;
             background-color: var(--white);
             color: var(--dark);
             overflow-x: hidden;
-            scroll-behavior: smooth;
         }
 
         h1, h2, h3, h4 {
-            /* CAMBIO DE FUENTE A TAHOMA */
             font-family: 'Tahoma', sans-serif;
             font-weight: 900;
             text-transform: uppercase;
@@ -78,33 +83,41 @@
         /* --- HEADER --- */
         header {
             position: fixed; top: 0; left: 0; width: 100%; height: 80px;
-            /* Fondo mucho más transparente (0.7) con blur intenso para efecto vidrio */
+            /* Fondo transparente con blur */
             background: rgba(255, 255, 255, 0.7); 
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px); /* Soporte Safari */
+            -webkit-backdrop-filter: blur(20px);
             z-index: 1000; display: flex; justify-content: space-between; align-items: center;
             padding: 0 5%; box-shadow: 0 4px 30px rgba(0,0,0,0.05);
             border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
         }
 
         .header-logo { display: flex; align-items: center; gap: 15px; }
         
-        /* Estilo para la imagen del logo en el header */
         .header-logo-img {
-            height: 60px; /* Tamaño ajustado para el header */
+            height: 60px;
             width: auto;
             object-fit: contain;
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
             transition: transform 0.3s ease;
         }
 
-        .header-logo-img:hover {
-            transform: scale(1.1);
-        }
+        .header-logo-img:hover { transform: scale(1.1); }
 
         .nav-menu { display: flex; gap: 30px; }
-        .nav-menu a { font-weight: 600; color: var(--dark); transition: var(--transition); }
+        .nav-menu a { 
+            font-weight: 600; 
+            color: var(--dark); 
+            transition: color 0.3s ease;
+            position: relative;
+        }
         .nav-menu a:hover { color: var(--blue); }
+        .nav-menu a::after {
+            content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0;
+            background: var(--red); transition: width 0.3s;
+        }
+        .nav-menu a:hover::after { width: 100%; }
 
         .header-cta { display: flex; align-items: center; gap: 15px; }
         .candidate-thumb {
@@ -122,64 +135,41 @@
 
         /* --- WRAPPER OSCURO (Hero + Perfil) --- */
         .dark-section-wrapper {
-            /* Degradado: Azul Marino Profundo -> Azul Cerúleo Hermoso */
             background: linear-gradient(to bottom, #001020 0%, #001f3f 40%, #007BA7 100%);
             padding-bottom: 80px;
             position: relative;
             overflow: hidden;
         }
 
-        /* Shapes (Ajustadas para fondo oscuro) */
         .shape { position: absolute; border-radius: 50%; filter: blur(80px); z-index: 0; opacity: 0.3; animation: float 8s ease-in-out infinite; }
         .shape-1 { width: 500px; height: 500px; background: radial-gradient(circle, var(--yellow), transparent); top: -10%; right: -10%; }
         .shape-2 { width: 600px; height: 600px; background: radial-gradient(circle, var(--blue), transparent); bottom: 10%; left: -15%; animation-delay: 2s; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
 
-
         /* --- 2. HERO SECTION --- */
         .hero {
             position: relative;
-            min-height: 100vh; /* Asegura altura completa */
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
             background: transparent;
-            padding-top: 100px; /* Espacio para el header */
-            padding-bottom: 50px;
+            padding-top: 100px; padding-bottom: 50px;
         }
 
         .hero-layout {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            max-width: 1300px; /* Un poco más ancho para acomodar la foto gigante */
-            padding: 0 20px;
-            z-index: 2;
+            display: flex; align-items: center; justify-content: space-between;
+            width: 100%; max-width: 1300px; padding: 0 20px; z-index: 2;
         }
 
         .hero-text-side {
-            flex: 1;
-            /* ALINEACIÓN A LA DERECHA */
-            text-align: right; 
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: flex-end; /* Alinea los elementos hijos (como el lema) a la derecha */
-            padding-left: 20px;
-            padding-right: 20px;
-            z-index: 3;
+            flex: 1; text-align: right; 
+            display: flex; flex-direction: column; justify-content: center; align-items: flex-end;
+            padding-left: 20px; padding-right: 20px; z-index: 3;
         }
 
         .hero-image-side {
-            flex: 1.2; /* Darle más espacio a la imagen */
-            display: flex;
-            justify-content: flex-start; /* Alinear imagen a la izquierda */
-            align-items: flex-end; /* Alinear abajo */
-            position: relative;
+            flex: 1.2; display: flex; justify-content: flex-start; align-items: flex-end; position: relative;
         }
 
-        /* Efecto Oro Diagonal */
         .gold-diagonal {
             background: linear-gradient(45deg, #FFD700 0%, #FDB931 20%, #FFFFFF 50%, #FDB931 80%, #FFD700 100%);
             background-size: 200% auto; color: transparent;
@@ -191,59 +181,31 @@
         .gold-diagonal:hover { filter: brightness(1.3) drop-shadow(0 0 10px rgba(255, 215, 0, 0.8)); transform: scale(1.02); cursor: default; }
 
         .hero-name { 
-            font-size: 7rem; /* Ajustado para layout lado a lado */
-            line-height: 0.9; 
-            margin-bottom: 10px; 
-            font-weight: 900; 
-            font-family: 'Tahoma', sans-serif; /* APLICAR TAHOMA ESPECÍFICAMENTE */
-            /* Extra Thick Stroke Effect simulation via text-shadow or font */
+            font-size: 7rem; line-height: 0.9; margin-bottom: 10px; font-weight: 900; 
+            font-family: 'Tahoma', sans-serif;
             text-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .hero-subtitle { 
-            font-size: 2.5rem; 
-            margin-bottom: 30px; 
-            display: block; 
-            font-weight: 400; 
-        }
+        .hero-subtitle { font-size: 2.5rem; margin-bottom: 30px; display: block; font-weight: 400; }
 
         .hero-motto {
             font-size: 1.2rem; font-weight: 300; color: var(--dark);
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(10px); padding: 15px 30px;
+            background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 15px 30px;
             border-radius: 50px; display: inline-block;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            max-width: 90%;
-            /* Asegurar que el texto dentro de la cápsula se vea bien */
-            text-align: center; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-width: 90%; text-align: center; 
         }
 
         .hero-img-container {
-            width: 100%;
-            max-width: 750px; /* FOTO GIGANTESCA */
-            height: auto;
-            background: transparent;
-            border: none;
-            box-shadow: none;
-            border-radius: 0;
-            overflow: visible;
-            /* Cambiada animación para entrar desde la izquierda */
+            width: 100%; max-width: 750px; height: auto;
+            background: transparent; border: none; box-shadow: none; border-radius: 0; overflow: visible;
             animation: slideInLeft 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
             filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.15));
         }
         
         .hero-img-container img { 
-            width: 100%; 
-            height: auto; 
-            object-fit: contain; 
-            /* Difuminado suave abajo para que no se vea raro el corte */
+            width: 100%; height: auto; object-fit: contain; 
             mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
             -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
-        }
-
-        @keyframes slideInRight {
-            from { opacity: 0; transform: translateX(50px); }
-            to { opacity: 1; transform: translateX(0); }
         }
 
         @keyframes slideInLeft {
@@ -257,79 +219,45 @@
         .section-title span { color: var(--blue); }
 
         /* --- PERFIL --- */
-        #perfil { background: transparent; } /* Transparente para ver el degradado azul cerúleo */
+        #perfil { background: transparent; }
         
-        /* BORDE ANIMADO COMÚN */
         .animated-border-wrapper {
-            position: relative;
-            background: transparent;
-            border-radius: var(--border-radius);
-            padding: 3px; /* Grosor del borde */
-            overflow: hidden;
-            --border-color: var(--yellow);
+            position: relative; background: transparent; border-radius: var(--border-radius);
+            padding: 3px; overflow: hidden; --border-color: var(--yellow);
         }
 
         .animated-border-wrapper::before {
             content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
             background: conic-gradient(from 0deg, transparent, transparent, var(--border-color), transparent, transparent);
-            animation: rotateBorder 4s linear infinite;
-            z-index: 0;
+            animation: rotateBorder 4s linear infinite; z-index: 0;
         }
 
-        /* Estilo específico para la Tarjeta de Perfil */
         .profile-card-inner {
-            position: relative;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 50px; 
-            border-radius: 17px; /* un poco menos que el wrapper (20px) */
-            display: flex; gap: 50px; align-items: center;
-            z-index: 1;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            position: relative; background: rgba(255, 255, 255, 0.95); padding: 50px; 
+            border-radius: 17px; display: flex; gap: 50px; align-items: center;
+            z-index: 1; box-shadow: 0 20px 50px rgba(0,0,0,0.2);
         }
 
-        .profile-container {
-            /* Ahora es solo el wrapper para el borde */
-            border-radius: var(--border-radius);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5); 
-        }
-
-        /* Estilo específico para los Tags */
+        .profile-container { border-radius: var(--border-radius); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
         .values-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
         
-        .tag-wrapper {
-            display: inline-block;
-            border-radius: 20px;
-            padding: 2px; /* Borde fino para tags */
-            --border-color: var(--yellow);
-        }
-        
+        .tag-wrapper { display: inline-block; border-radius: 20px; padding: 2px; --border-color: var(--yellow); }
         .tag-inner {
-            position: relative; z-index: 1;
-            background: var(--white);
-            padding: 8px 15px; 
-            border-radius: 18px; 
-            color: var(--blue); font-weight: bold; font-size: 0.9rem;
-            transition: 0.3s;
+            position: relative; z-index: 1; background: var(--white); padding: 8px 15px; 
+            border-radius: 18px; color: var(--blue); font-weight: bold; font-size: 0.9rem; transition: 0.3s;
         }
-        
-        .tag-wrapper:hover .tag-inner {
-            background: var(--yellow);
-            color: var(--dark);
-        }
+        .tag-wrapper:hover .tag-inner { background: var(--yellow); color: var(--dark); }
 
         /* --- 4. PROPUESTAS --- */
         .proposals-section {
-            /* DEGRADADO SOLICITADO: #F7DE03 Sólido casi hasta el final, luego a Blanco */
             background: linear-gradient(to bottom, #F7DE03 0%, #F7DE03 90%, #FFFFFF 100%);
-            /* Eliminé los puntos para que el color amarillo resalte más limpio */
         }
 
         .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 40px; }
 
         .card-wrapper {
             position: relative; border-radius: var(--border-radius); overflow: hidden;
-            padding: 3px; background: transparent;
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            padding: 3px; background: transparent; transition: transform 0.4s ease, box-shadow 0.4s ease;
             --border-color: var(--yellow);
         }
         .proposals-section .card-wrapper { --border-color: var(--blue) !important; }
@@ -342,8 +270,7 @@
         @keyframes rotateBorder { 100% { transform: rotate(360deg); } }
 
         .proposal-card-inner {
-            background: var(--white); padding: 30px; border-radius: 18px;
-            height: 100%; position: relative; z-index: 1;
+            background: var(--white); padding: 30px; border-radius: 18px; height: 100%; position: relative; z-index: 1;
         }
         .card-wrapper:hover { transform: translateY(-15px); box-shadow: 0 25px 50px rgba(0,0,0,0.15); }
 
@@ -351,26 +278,18 @@
             font-size: 3rem; margin-bottom: 20px;
             background: -webkit-linear-gradient(45deg, var(--blue), var(--red));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            /* ANIMACIÓN HOVER ICONOS */
-            display: inline-block;
-            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            display: inline-block; transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
+        .card-wrapper:hover .p-icon { transform: scale(1.3) rotate(15deg); }
 
-        /* Efecto al pasar el mouse por la tarjeta */
-        .card-wrapper:hover .p-icon {
-            transform: scale(1.3) rotate(15deg);
-        }
-
-        /* Animation for Hidden Proposals */
         #more-proposals { display: none; }
         .fade-in-smooth { animation: fadeInSmooth 0.8s ease forwards; }
         @keyframes fadeInSmooth { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         /* --- 5. PLAN DE ACCIÓN --- */
-        /* Ajuste específico: Fondo Azul Celeste para las tarjetas del Plan */
         #plan .proposal-card-inner {
-            background: linear-gradient(135deg, #E1F5FE 0%, #81D4FA 100%); /* Celeste Vibrante */
-            border: 1px solid rgba(255, 255, 255, 0.5); /* Borde sutil */
+            background: linear-gradient(135deg, #E1F5FE 0%, #81D4FA 100%);
+            border: 1px solid rgba(255, 255, 255, 0.5);
         }
 
         /* --- 6. GALERÍA --- */
@@ -383,24 +302,12 @@
         #galeria .section-title span { color: var(--yellow); text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
 
         .gallery-grid {
-            display: grid; 
-            /* GAP aumentado */
-            gap: 60px; 
-            padding-bottom: 20px;
-            /* GRID DE 2x3 (3 Columnas en PC) */
+            display: grid; gap: 60px; padding-bottom: 20px;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         }
-        
-        /* En pantallas grandes forzamos 3 columnas para que sea 2x3 */
-        @media (min-width: 1024px) {
-            .gallery-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
+        @media (min-width: 1024px) { .gallery-grid { grid-template-columns: repeat(3, 1fr); } }
 
-        .gallery-card-wrapper {
-            height: 280px; padding: 4px; --border-color: var(--yellow); background: transparent;
-        }
+        .gallery-card-wrapper { height: 280px; padding: 4px; --border-color: var(--yellow); background: transparent; }
         .gallery-item {
             height: 100%; width: 100%; border-radius: 16px; cursor: pointer; position: relative; overflow: hidden; background: #000; z-index: 2;
         }
@@ -413,56 +320,30 @@
         .gallery-card-wrapper:hover .gallery-overlay { opacity: 1; }
         .gallery-text { color: var(--yellow); font-weight: bold; font-size: 1.4rem; text-transform: uppercase; }
 
-        /* Estilos para la Última Tarjeta (Fuera del Grid) */
+        /* Título Galería Final */
         .final-card-title {
-            text-align: center;
-            font-size: 3rem;
-            color: var(--yellow);
-            margin: 20px 0 30px 0;
-            text-transform: uppercase;
-            font-weight: 900;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            line-height: 1.2;
+            text-align: center; font-size: 3rem; color: var(--yellow); margin: 20px 0 30px 0;
+            text-transform: uppercase; font-weight: 900; text-shadow: 0 4px 10px rgba(0,0,0,0.3); line-height: 1.2;
         }
 
-        .final-card-container {
-            display: flex;
-            justify-content: center;
-            width: 100%;
-            padding-bottom: 60px; /* Separación con el botón */
-        }
-
-        /* Tarjeta ancha */
-        .final-card-wrapper {
-            width: 90%; /* Casi todo el ancho */
-            max-width: 1000px;
-            height: 300px; 
-            padding: 4px;
-            --border-color: var(--yellow);
-            background: transparent;
-        }
+        .final-card-container { display: flex; justify-content: center; width: 100%; padding-bottom: 60px; }
+        .final-card-wrapper { width: 90%; max-width: 1000px; height: 300px; padding: 4px; --border-color: var(--yellow); background: transparent; }
 
         /* --- 7. FINAL CTA --- */
         #vota {
-            background-color: var(--blue);
-            color: white;
-            padding: 100px 0 180px 0; 
-            text-align: center;
+            background-color: var(--blue); color: white; padding: 100px 0 180px 0; text-align: center;
         }
-        
         #vota .section-title { color: white; text-align: center; margin-bottom: 50px; }
 
         .btn-wrapper {
             display: inline-block; position: relative; padding: 5px; border-radius: 110px;
             overflow: hidden; background: transparent; z-index: 1;
         }
-
         .btn-wrapper::before {
             content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
             background: conic-gradient(from 0deg, transparent, transparent, var(--yellow), transparent, transparent);
             animation: rotateBorder 4s linear infinite; opacity: 0; transition: opacity 0.6s ease; z-index: -1;
         }
-
         .btn-wrapper:hover::before { opacity: 1; }
 
         .btn-mega-giant {
@@ -472,7 +353,6 @@
             transition: background-color 0.8s cubic-bezier(0.25, 0.8, 0.25, 1), color 0.8s ease, transform 0.4s ease, box-shadow 0.8s ease;
             position: relative; z-index: 2;
         }
-
         .btn-wrapper:hover .btn-mega-giant {
             background: var(--yellow); color: var(--blue); transform: scale(1.02);
             box-shadow: 0 30px 80px rgba(255, 215, 0, 0.4);
@@ -486,26 +366,13 @@
         .footer-left, .footer-center, .footer-right { flex: 1; display: flex; }
         .footer-left { justify-content: flex-start; } .footer-center { justify-content: center; text-align: center; } .footer-right { justify-content: flex-end; }
         
-        /* Ajuste logo footer para contener imagen */
         .footer-logo-box, .footer-photo-box {
             width: 100px; height: 100px; background: #fff; border-radius: 50%;
             display: flex; align-items: center; justify-content: center; border: 3px solid var(--yellow); font-size: 0.8rem; color: #777;
-            overflow: hidden; /* Para que la imagen no se salga del círculo */
+            overflow: hidden;
         }
-        
-        .footer-logo-box img, .footer-photo-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Ajuste para fotos */
-            padding: 0;
-        }
-        
-        /* Ajuste específico para el logo que necesita padding */
-        .footer-logo-box img {
-            object-fit: contain;
-            padding: 5px;
-        }
-
+        .footer-logo-box img, .footer-photo-box img { width: 100%; height: 100%; object-fit: cover; padding: 0; }
+        .footer-logo-box img { object-fit: contain; padding: 5px; }
         .footer-info h4 { color: var(--yellow); margin-bottom: 10px; font-size: 1.5rem; }
         .footer-info p { color: #ccc; }
 
@@ -521,25 +388,10 @@
 
         /* RESPONSIVE */
         @media (max-width: 992px) {
-            .hero-layout { 
-                flex-direction: column; /* En móvil, columna */
-                text-align: center; 
-            }
-            .hero-text-side { 
-                order: 2; /* Texto abajo en móvil */
-                padding-left: 0; 
-                margin-top: -40px; /* Subir un poco el texto para conectar con la foto */
-                text-align: center; 
-                align-items: center; /* Centrar texto en móvil */
-            }
-            .hero-image-side {
-                order: 1; /* Foto arriba en móvil */
-                justify-content: center;
-                width: 100%;
-            }
-            .hero-img-container {
-                max-width: 400px; /* Tamaño controlado en móvil */
-            }
+            .hero-layout { flex-direction: column; text-align: center; }
+            .hero-text-side { order: 2; padding-left: 0; margin-top: -40px; text-align: center; align-items: center; }
+            .hero-image-side { order: 1; justify-content: center; width: 100%; }
+            .hero-img-container { max-width: 400px; }
             .hero-name { font-size: 5rem; }
             .hero-subtitle { font-size: 2rem; }
             .profile-card-inner { flex-direction: column; text-align: center; padding: 30px; }
@@ -549,7 +401,6 @@
             .btn-mega-giant { font-size: 1.5rem; padding: 20px 40px; }
             footer { flex-direction: column; gap: 30px; }
             .footer-left, .footer-center, .footer-right { width: 100%; justify-content: center; }
-            
             .final-card-title { font-size: 2rem; }
         }
     </style>
@@ -565,7 +416,6 @@
     <!-- 1. HEADER -->
     <header>
         <div class="header-logo">
-            <!-- LOGO IMAGEN AQUÍ -->
             <img src="img/insa.png" alt="Logo INSA" class="header-logo-img">
             <h3 style="margin-left: 10px; color: var(--blue);">INSA</h3>
         </div>
@@ -580,7 +430,6 @@
         </nav>
         <div class="header-cta">
             <div class="candidate-thumb">
-                <!-- FOTO MINIATURA -->
                 <img src="img/dustin1.jpg" alt="Dustin">
             </div>
             <button class="btn-vote-sm">Vota por mí</button>
@@ -589,38 +438,30 @@
 
     <!-- WRAPPER OSCURO CONTINUO (HERO + PERFIL) -->
     <div class="dark-section-wrapper">
-        
-        <!-- Shapes de Fondo -->
         <div class="shape shape-1"></div>
         <div class="shape shape-2"></div>
 
         <!-- 2. HERO -->
         <section id="inicio" class="hero">
             <div class="hero-layout">
-                
                 <!-- Lado Izquierdo: Foto Gigante Transparente -->
                 <div class="hero-image-side">
                     <div class="hero-img-container">
-                        <!-- FOTO PRINCIPAL -->
-                        <img src="dustin1.jpg" alt="Dustin Candidato">
+                        <img src="img/dustin_hero.png" alt="Dustin Candidato">
                     </div>
                 </div>
-
                 <!-- Lado Derecho: Texto -->
                 <div class="hero-text-side">
                     <div class="hero-name gold-diagonal">DUSTIN</div>
                     <div class="hero-subtitle gold-diagonal">PERSONERO INSA 2026</div>
                     <h2 class="hero-motto">“EJEMPLO DE BONDAD, DISCIPLINA Y CIENCIA”</h2>
                 </div>
-
             </div>
         </section>
 
         <!-- 3. PERFIL -->
         <section id="perfil" class="section">
             <div class="reveal-up">
-                
-                <!-- Wrapper con Borde Animado para la Tarjeta de Perfil -->
                 <div class="animated-border-wrapper profile-container">
                     <div class="profile-card-inner">
                         <div class="profile-text">
@@ -629,39 +470,25 @@
                                 Soy un estudiante que ha demostrado con hechos su compromiso con la excelencia, la disciplina y el servicio. Durante mis once años en el INSA he estado de manera consecutiva en el cuadro de honor desde kínder, he ganado dos veces las olimpiadas matemáticas y tres veces el concurso bíblico.
                             </p>
                             <br>
-                            <!-- Etiquetas con Borde Animado Individual -->
                             <div class="values-tags">
-                                <div class="animated-border-wrapper tag-wrapper">
-                                    <div class="tag-inner">#Liderazgo</div>
-                                </div>
-                                <div class="animated-border-wrapper tag-wrapper">
-                                    <div class="tag-inner">#Excelencia</div>
-                                </div>
-                                <div class="animated-border-wrapper tag-wrapper">
-                                    <div class="tag-inner">#Disciplina</div>
-                                </div>
-                                <div class="animated-border-wrapper tag-wrapper">
-                                    <div class="tag-inner">#Confianza</div>
-                                </div>
-                                <div class="animated-border-wrapper tag-wrapper">
-                                    <div class="tag-inner">#Cercanía</div>
-                                </div>
+                                <div class="animated-border-wrapper tag-wrapper"><div class="tag-inner">#Liderazgo</div></div>
+                                <div class="animated-border-wrapper tag-wrapper"><div class="tag-inner">#Excelencia</div></div>
+                                <div class="animated-border-wrapper tag-wrapper"><div class="tag-inner">#Disciplina</div></div>
+                                <div class="animated-border-wrapper tag-wrapper"><div class="tag-inner">#Confianza</div></div>
+                                <div class="animated-border-wrapper tag-wrapper"><div class="tag-inner">#Cercanía</div></div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </section>
-
-    </div> <!-- Fin Wrapper Oscuro -->
+    </div>
 
     <!-- 4. PROPUESTAS -->
     <section id="propuestas" class="section proposals-section">
         <h2 class="section-title slide-in-left">Mis <span>Propuestas</span></h2>
 
         <div class="grid-container" id="main-proposals">
-            
             <div class="card-wrapper reveal-up delay-100">
                 <div class="proposal-card-inner">
                     <div class="p-icon"><i class="fa-solid fa-radio"></i></div>
@@ -669,7 +496,6 @@
                     <p>Música durante descansos y almuerzos para alegrar el ambiente escolar.</p>
                 </div>
             </div>
-
             <div class="card-wrapper reveal-up delay-200">
                 <div class="proposal-card-inner">
                     <div class="p-icon"><i class="fa-solid fa-futbol"></i></div>
@@ -677,7 +503,6 @@
                     <p>Torneos de fútbol y voleibol (6°-11°) los viernes al final de la jornada.</p>
                 </div>
             </div>
-
             <div class="card-wrapper reveal-up delay-300">
                 <div class="proposal-card-inner">
                     <div class="p-icon"><i class="fa-solid fa-palette"></i></div>
@@ -685,7 +510,6 @@
                     <p>Retomar la feria de ciencias, galería de arte y periódico escolar.</p>
                 </div>
             </div>
-
             <div class="card-wrapper reveal-up delay-400">
                 <div class="proposal-card-inner">
                     <div class="p-icon"><i class="fa-solid fa-ghost"></i></div>
@@ -693,23 +517,20 @@
                     <p>Celebración especial de Halloween o Jean Day masivo para todo el colegio.</p>
                 </div>
             </div>
-            
-             <div class="card-wrapper reveal-up delay-100">
+            <div class="card-wrapper reveal-up delay-100">
                 <div class="proposal-card-inner">
                     <div class="p-icon"><i class="fa-solid fa-tree"></i></div>
                     <h3>Día Deportivo</h3>
                     <p>Salida de integración al parque para actividades recreativas.</p>
                 </div>
             </div>
-            
-             <div class="card-wrapper reveal-up delay-200">
+            <div class="card-wrapper reveal-up delay-200">
                 <div class="proposal-card-inner">
                     <div class="p-icon"><i class="fa-solid fa-user-group"></i></div>
                     <h3>Grupos de Estudio</h3>
                     <p>Tutorías de estudiantes de grados superiores para apoyar a compañeros.</p>
                 </div>
             </div>
-
         </div>
         
         <div class="grid-container" id="more-proposals" style="margin-top: 40px;">
@@ -759,60 +580,46 @@
     <section id="galeria" class="section">
         <h2 class="section-title slide-in-left">Si votas por <span>Dustin...</span></h2>
         
-        <!-- GRID DE 2x3 (6 Tarjetas) -->
         <div class="gallery-grid">
-            
-            <!-- 1. INTERCLASES -->
             <div class="card-wrapper gallery-card-wrapper reveal-up delay-100">
-                <div class="gallery-item" onclick="openModal('https://via.placeholder.com/800x600/CE1126/FFFFFF?text=Interclases')">
-                    <img src="https://via.placeholder.com/400x300/CE1126/FFFFFF?text=Interclases" alt="Interclases">
+                <div class="gallery-item" onclick="openModal('img/interclases.jpg')">
+                    <img src="img/interclases.jpg" alt="Interclases">
                     <div class="gallery-overlay"><div class="gallery-text">INTERCLASES</div></div>
                 </div>
             </div>
-
-            <!-- 2. RADIO INSA -->
             <div class="card-wrapper gallery-card-wrapper reveal-up delay-200">
-                <div class="gallery-item" onclick="openModal('https://via.placeholder.com/800x600/0033A0/FFFFFF?text=Radio+INSA')">
-                    <img src="https://via.placeholder.com/400x300/0033A0/FFFFFF?text=Radio+INSA" alt="Radio INSA">
+                <div class="gallery-item" onclick="openModal('img/radio.jpg')">
+                    <img src="img/radio.jpg" alt="Radio INSA">
                     <div class="gallery-overlay"><div class="gallery-text">RADIO INSA</div></div>
                 </div>
             </div>
-
-            <!-- 3. GALERIA DE ARTE -->
             <div class="card-wrapper gallery-card-wrapper reveal-up delay-300">
-                <div class="gallery-item" onclick="openModal('https://via.placeholder.com/800x600/FFD700/000000?text=Galeria+Arte')">
-                    <img src="https://via.placeholder.com/400x300/FFD700/000000?text=Galeria+Arte" alt="Galeria de Arte">
+                <div class="gallery-item" onclick="openModal('img/arte.jpg')">
+                    <img src="img/arte.jpg" alt="Galeria de Arte">
                     <div class="gallery-overlay"><div class="gallery-text">GALERÍA DE ARTE</div></div>
                 </div>
             </div>
-            
-            <!-- 4. FERIA DE CIENCIAS -->
             <div class="card-wrapper gallery-card-wrapper reveal-up delay-100">
-                <div class="gallery-item" onclick="openModal('https://via.placeholder.com/800x600/2ecc71/FFFFFF?text=Ciencias')">
-                    <img src="https://via.placeholder.com/400x300/2ecc71/FFFFFF?text=Ciencias" alt="Feria de Ciencias">
+                <div class="gallery-item" onclick="openModal('img/ciencia.jpg')">
+                    <img src="img/ciencia.jpg" alt="Feria de Ciencias">
                     <div class="gallery-overlay"><div class="gallery-text">FERIA DE CIENCIAS</div></div>
                 </div>
             </div>
-
-            <!-- 5. JUEGOS TRADICIONALES -->
             <div class="card-wrapper gallery-card-wrapper reveal-up delay-200">
-                <div class="gallery-item" onclick="openModal('https://via.placeholder.com/800x600/e67e22/FFFFFF?text=Juegos+Tradicionales')">
-                    <img src="https://via.placeholder.com/400x300/e67e22/FFFFFF?text=Juegos+Tradicionales" alt="Juegos Tradicionales">
+                <div class="gallery-item" onclick="openModal('img/juegos.jpg')">
+                    <img src="img/juegos.jpg" alt="Juegos Tradicionales">
                     <div class="gallery-overlay"><div class="gallery-text">JUEGOS TRADICIONALES</div></div>
                 </div>
             </div>
-
-            <!-- 6. MÁS CONCIERTOS -->
             <div class="card-wrapper gallery-card-wrapper reveal-up delay-300">
-                <div class="gallery-item" onclick="openModal('https://via.placeholder.com/800x600/9b59b6/FFFFFF?text=Conciertos')">
-                    <img src="https://via.placeholder.com/400x300/9b59b6/FFFFFF?text=Conciertos" alt="Más Conciertos">
+                <div class="gallery-item" onclick="openModal('img/concierto.jpg')">
+                    <img src="img/concierto.jpg" alt="Más Conciertos">
                     <div class="gallery-overlay"><div class="gallery-text">MÁS CONCIERTOS</div></div>
                 </div>
             </div>
-
         </div>
 
-        <!-- 7. TÍTULO SOLO (SE QUEDA AQUÍ) -->
+        <!-- TITULO Y MUCHO MÁS (SEPARADO) -->
         <h3 class="final-card-title reveal-up" style="margin-bottom: 0; padding-bottom: 40px;">Y MUCHO MÁS...<br>SI VOTAS POR DUSTIN</h3>
 
     </section>
@@ -822,11 +629,11 @@
         <div class="cta-content section">
             <h2 class="section-title slide-in-left" style="text-align:center; margin-bottom: 40px;">¿LISTO PARA EL CAMBIO?</h2>
             
-            <!-- TARJETA SORPRESAS (MOVIDA AQUÍ) -->
+            <!-- TARJETA SORPRESAS (MOVIDA AQUÍ, SIN TEXTO) -->
             <div class="final-card-container reveal-up delay-200">
                  <div class="card-wrapper gallery-card-wrapper final-card-wrapper">
-                    <div class="gallery-item" onclick="openModal('https://via.placeholder.com/1200x600/1a1a1a/FFD700?text=Sorpresas')">
-                        <img src="https://via.placeholder.com/1200x600/1a1a1a/FFD700?text=Sorpresas" alt="Y mucho más">
+                    <div class="gallery-item" onclick="openModal('img/sorpresa.jpg')">
+                        <img src="img/sorpresa.jpg" alt="Y mucho más">
                         <div class="gallery-overlay"><div class="gallery-text"></div></div>
                     </div>
                 </div>
@@ -841,9 +648,8 @@
     <!-- 9. FOOTER -->
     <footer>
         <div class="footer-left">
-            <!-- LOGO FOOTER -->
             <div class="footer-logo-box">
-                <img src="insa.png" alt="Logo INSA">
+                <img src="img/insa.png" alt="Logo INSA">
             </div>
         </div>
         <div class="footer-center">
@@ -854,9 +660,8 @@
             </div>
         </div>
         <div class="footer-right">
-            <!-- FOTO FOOTER -->
             <div class="footer-photo-box">
-                <img src="dustin1.jpg" alt="Dustin">
+                <img src="img/dustin1.jpg" alt="Dustin">
             </div>
         </div>
     </footer>
