@@ -13,6 +13,9 @@
     <!-- Iconos (FontAwesome CDN) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Librería para el efecto Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
     <style>
         :root {
             /* Paleta de Colores Estricta */
@@ -36,14 +39,11 @@
         }
 
         html {
-            /* SCROLL SUAVE NATIVO */
             scroll-behavior: smooth;
-            /* Compensación para el header fijo */
             scroll-padding-top: 100px; 
         }
 
         body {
-            /* FUENTE TAHOMA */
             font-family: 'Tahoma', sans-serif;
             background-color: var(--white);
             color: var(--dark);
@@ -83,7 +83,6 @@
         /* --- HEADER --- */
         header {
             position: fixed; top: 0; left: 0; width: 100%; height: 80px;
-            /* Fondo transparente con blur */
             background: rgba(255, 255, 255, 0.35); 
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
@@ -106,18 +105,43 @@
         .header-logo-img:hover { transform: scale(1.1); }
 
         .nav-menu { display: flex; gap: 30px; }
-        .nav-menu a { 
-            font-weight: 600; 
-            color: var(--dark); 
-            transition: color 0.3s ease;
+        
+        .header-text-format { 
+            font-size: 1.15rem; 
+            text-transform: uppercase; 
+            font-weight: 900; 
+            color: var(--blue); /* Color Azul por defecto */
+            text-shadow:
+                -1.5px -1.5px 0 var(--white),
+                 1.5px -1.5px 0 var(--white),
+                -1.5px  1.5px 0 var(--white),
+                 1.5px  1.5px 0 var(--white),
+                 0 0 10px rgba(255,255,255,0.8); /* Borde blanco */
+            transition: all 0.4s ease;
             position: relative;
+            padding-bottom: 5px;
+            letter-spacing: 1px;
+            cursor: pointer;
         }
-        .nav-menu a:hover { color: var(--blue); }
-        .nav-menu a::after {
-            content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0;
-            background: var(--red); transition: width 0.3s;
+        
+        .header-text-format:hover { 
+            color: var(--white); /* Pasa a blanco en Hover */
+            text-shadow:
+                -1.5px -1.5px 0 var(--blue),
+                 1.5px -1.5px 0 var(--blue),
+                -1.5px  1.5px 0 var(--blue),
+                 1.5px  1.5px 0 var(--blue),
+                 0 0 15px var(--blue); /* Borde azul */
         }
-        .nav-menu a:hover::after { width: 100%; }
+
+        .header-text-format::after {
+            content: ''; position: absolute; width: 0; height: 4px; bottom: -5px; left: 0;
+            background: var(--blue); transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            box-shadow: 0 0 8px var(--blue);
+            border-radius: 2px;
+        }
+        
+        .header-text-format:hover::after { width: 100%; }
 
         .header-cta { display: flex; align-items: center; gap: 15px; }
         .candidate-thumb {
@@ -133,18 +157,21 @@
         }
         .btn-vote-sm:hover { transform: scale(1.05); }
 
-        /* --- WRAPPER OSCURO (Hero + Perfil) --- */
+        /* --- WRAPPER OSCURO --- */
         .dark-section-wrapper {
-            background: linear-gradient(to bottom, #001020 0%, #001f3f 40%, #007BA7 100%);
-            padding-bottom: 80px;
+            background: linear-gradient(to bottom, #010A1F 0%, #061B40 40%, #0A2E73 100%);
             position: relative;
             overflow: hidden;
         }
+        .dark-section-wrapper.hero-wrapper { padding-bottom: 80px; }
+        .dark-section-wrapper.final-wrapper { padding-top: 50px; padding-bottom: 80px; }
 
-        .shape { position: absolute; border-radius: 50%; filter: blur(80px); z-index: 0; opacity: 0.3; animation: float 8s ease-in-out infinite; }
+        .shape { position: absolute; border-radius: 50%; filter: blur(80px); z-index: 0; opacity: 0.2; animation: float 8s ease-in-out infinite; }
         .shape-1 { width: 500px; height: 500px; background: radial-gradient(circle, var(--yellow), transparent); top: -10%; right: -10%; }
         .shape-2 { width: 600px; height: 600px; background: radial-gradient(circle, var(--blue), transparent); bottom: 10%; left: -15%; animation-delay: 2s; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
+        .hero, #perfil, #vota { position: relative; z-index: 2; }
 
         /* --- 2. HERO SECTION --- */
         .hero {
@@ -178,10 +205,12 @@
             transition: filter 0.3s ease, transform 0.3s ease; display: inline-block;
         }
         @keyframes goldFlow { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+        
         .gold-diagonal:hover { filter: brightness(1.3) drop-shadow(0 0 10px rgba(255, 215, 0, 0.8)); transform: scale(1.02); cursor: default; }
 
         .hero-name { 
-            font-size: 7rem; line-height: 0.9; margin-bottom: 10px; font-weight: 900; 
+            font-size: 9.8rem;
+            line-height: 0.9; margin-bottom: 10px; font-weight: 900; 
             font-family: 'Tahoma', sans-serif;
             text-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
@@ -189,11 +218,15 @@
         .hero-subtitle { font-size: 2.5rem; margin-bottom: 30px; display: block; font-weight: 400; }
 
         .hero-motto {
-            font-size: 1.2rem; font-weight: 300; color: var(--dark);
-            background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 15px 30px;
-            border-radius: 50px; display: inline-block;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-width: 90%; text-align: center; 
+            font-size: 1.3rem; font-weight: 900; color: #061B40; 
+            background: linear-gradient(45deg, #FFD700 0%, #FDB931 20%, #FFFFFF 50%, #FDB931 80%, #FFD700 100%);
+            background-size: 200% auto; animation: goldFlow 3s linear infinite;
+            padding: 15px 30px; border-radius: 50px; display: inline-block;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); max-width: 90%; text-align: center; 
+            transition: transform 0.4s ease, filter 0.4s ease, box-shadow 0.4s ease;
+            position: relative;
         }
+        .hero-motto:hover { transform: scale(1.05); filter: brightness(1.2); box-shadow: 0 0 35px 10px rgba(255, 215, 0, 0.6); cursor: default; }
 
         .hero-img-container {
             width: 100%; max-width: 750px; height: auto;
@@ -215,11 +248,21 @@
 
         /* --- 3. SECCIONES --- */
         .section { padding: 100px 10%; position: relative; }
-        .section-title { font-size: 3.5rem; margin-bottom: 70px; color: var(--dark); text-align: left; }
+        
+        /* Sombra por defecto para títulos de sección */
+        .section-title { 
+            font-size: 3.5rem; 
+            margin-bottom: 70px; 
+            color: var(--dark); 
+            text-align: left; 
+            text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.15); /* Sombreado a todos los títulos */
+        }
         .section-title span { color: var(--blue); }
 
         /* --- PERFIL --- */
         #perfil { background: transparent; }
+        #perfil .section-title { color: var(--dark); text-shadow: 2px 4px 15px rgba(0,0,0,0.5); }
+        #perfil .section-title span { color: var(--yellow); }
         
         .animated-border-wrapper {
             position: relative; background: transparent; border-radius: var(--border-radius);
@@ -249,20 +292,30 @@
         .tag-wrapper:hover .tag-inner { background: var(--yellow); color: var(--dark); }
 
         /* --- 4. PROPUESTAS --- */
-        .proposals-section {
-            background: linear-gradient(to bottom, #F7DE03 0%, #F7DE03 90%, #FFFFFF 100%);
-        }
-
+        .proposals-section { background: linear-gradient(to bottom, #F7DE03 0%, #F7DE03 90%, #FFFFFF 100%); }
         .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 40px; }
 
-        .card-wrapper {
-            position: relative; border-radius: var(--border-radius); overflow: hidden;
+        .click-hint {
+            color: var(--dark); /* Ahora en Negro oscuro */
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-top: -60px;
+            margin-bottom: 50px;
+            text-align: left;
+        }
+
+        /* CORRECCIÓN PRINCIPAL: Se restaura overflow: hidden a TODAS las envolturas para que el borde se recorte bien */
+        .card-wrapper, .gallery-card-wrapper {
+            position: relative; border-radius: var(--border-radius);
             padding: 3px; background: transparent; transition: transform 0.4s ease, box-shadow 0.4s ease;
             --border-color: var(--yellow);
+            z-index: 10; cursor: pointer;
+            overflow: hidden; /* <--- ESTO ARREGLA EL CUADRADO GIGANTE GIRATORIO */
         }
+
         .proposals-section .card-wrapper { --border-color: var(--blue) !important; }
 
-        .card-wrapper::before {
+        .card-wrapper::before, .gallery-card-wrapper::before {
             content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
             background: conic-gradient(from 0deg, transparent, transparent, var(--border-color), transparent, transparent);
             animation: rotateBorder 4s linear infinite;
@@ -270,7 +323,7 @@
         @keyframes rotateBorder { 100% { transform: rotate(360deg); } }
 
         .proposal-card-inner {
-            background: var(--white); padding: 30px; border-radius: 18px; height: 100%; position: relative; z-index: 1;
+            background: var(--white); padding: 30px; border-radius: 18px; height: 100%; position: relative; z-index: 1; overflow: hidden;
         }
         .card-wrapper:hover { transform: translateY(-15px); box-shadow: 0 25px 50px rgba(0,0,0,0.15); }
 
@@ -279,7 +332,12 @@
             background: -webkit-linear-gradient(45deg, var(--blue), var(--red));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             display: inline-block; transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            position: relative; z-index: 2; 
         }
+        .proposal-card-inner h3, .proposal-card-inner p, .plan-text {
+            position: relative; z-index: 2; 
+        }
+
         .card-wrapper:hover .p-icon { transform: scale(1.3) rotate(15deg); }
 
         #more-proposals { display: none; }
@@ -296,18 +354,45 @@
         #galeria {
             background-color: var(--red);
             background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-            background-size: 30px 30px; color: var(--white);
+            background-size: 30px 30px; 
+            color: var(--white);
+            position: relative;
+            padding-bottom: 120px;
+            margin-bottom: 0;
+            z-index: 1;
         }
-        #galeria .section-title { color: var(--white); }
-        #galeria .section-title span { color: var(--yellow); text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        
+        #galeria::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(to bottom, transparent, #010A1F);
+            pointer-events: none;
+            z-index: 1;
+        }
 
+        #galeria .section-title { color: var(--white); position: relative; z-index: 2; text-shadow: 2px 4px 15px rgba(0,0,0,0.6); }
+        #galeria .section-title span { color: var(--yellow); text-shadow: 2px 4px 15px rgba(0,0,0,0.6); }
+
+        /* El grid debe actuar como un contexto superior para que los rayos queden por detrás de las tarjetas pero sobre el fondo */
         .gallery-grid {
             display: grid; gap: 60px; padding-bottom: 20px;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            position: relative; z-index: 2;
         }
         @media (min-width: 1024px) { .gallery-grid { grid-template-columns: repeat(3, 1fr); } }
 
-        .gallery-card-wrapper { height: 280px; padding: 4px; --border-color: var(--yellow); background: transparent; }
+        .gallery-card-wrapper { 
+            height: 280px; 
+            padding: 4px; 
+            --border-color: var(--yellow); 
+            background: transparent; 
+            border-radius: var(--border-radius);
+        }
+        
         .gallery-item {
             height: 100%; width: 100%; border-radius: 16px; cursor: pointer; position: relative; overflow: hidden; background: #000; z-index: 2;
         }
@@ -320,24 +405,27 @@
         .gallery-card-wrapper:hover .gallery-overlay { opacity: 1; }
         .gallery-text { color: var(--yellow); font-weight: bold; font-size: 1.4rem; text-transform: uppercase; }
 
-        /* Título Galería Final */
         .final-card-title {
             text-align: center; font-size: 3rem; color: var(--yellow); margin: 20px 0 30px 0;
-            text-transform: uppercase; font-weight: 900; text-shadow: 0 4px 10px rgba(0,0,0,0.3); line-height: 1.2;
+            text-transform: uppercase; font-weight: 900; text-shadow: 2px 4px 15px rgba(0,0,0,0.6); line-height: 1.2;
+            position: relative; z-index: 2;
         }
 
-        .final-card-container { display: flex; justify-content: center; width: 100%; padding-bottom: 60px; }
-        .final-card-wrapper { width: 90%; max-width: 1000px; height: 40vh ; padding: 4px; --border-color: var(--yellow); background: transparent; }
+        .final-card-container { display: flex; justify-content: center; width: 100%; padding-bottom: 20px; position: relative; z-index: 2; }
+        .final-card-wrapper { 
+            width: 90%; max-width: 1000px; 
+            height: 60vh; min-height: 450px; 
+            padding: 4px; --border-color: var(--yellow); background: transparent; 
+        }
 
         /* --- 7. FINAL CTA --- */
-        #vota {
-            background-color: var(--blue); color: white; padding: 100px 0 180px 0; text-align: center;
-        }
-        #vota .section-title { color: white; text-align: center; margin-bottom: 50px; }
+        #seccion-final { margin-top: 0; }
+        #vota { background: transparent; color: white; padding: 50px 0 180px 0; text-align: center; }
+        #vota .section-title { color: white; text-align: center; margin-bottom: 50px; text-shadow: 2px 4px 15px rgba(0,0,0,0.6); }
 
         .btn-wrapper {
             display: inline-block; position: relative; padding: 5px; border-radius: 110px;
-            overflow: hidden; background: transparent; z-index: 1;
+            overflow: hidden; background: transparent; z-index: 10;
         }
         .btn-wrapper::before {
             content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
@@ -350,18 +438,28 @@
             display: block; padding: 40px 100px; font-size: 3.5rem; font-weight: 900; color: var(--white);
             background: var(--red); border-radius: 100px; text-transform: uppercase; letter-spacing: 3px;
             border: none; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); cursor: pointer;
-            transition: background-color 0.8s cubic-bezier(0.25, 0.8, 0.25, 1), color 0.8s ease, transform 0.4s ease, box-shadow 0.8s ease;
-            position: relative; z-index: 2;
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.6s ease;
+            position: relative; z-index: 2; overflow: hidden;
         }
-        .btn-wrapper:hover .btn-mega-giant {
-            background: var(--yellow); color: var(--blue); transform: scale(1.02);
-            box-shadow: 0 30px 80px rgba(255, 215, 0, 0.4);
+        
+        .btn-mega-giant span { position: relative; z-index: 3; transition: color 0.6s ease; }
+
+        .btn-mega-giant::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(45deg, #FFD700 0%, #FDB931 20%, #FFFFFF 50%, #FDB931 80%, #FFD700 100%);
+            background-size: 200% auto; animation: goldFlow 3s linear infinite;
+            opacity: 0; z-index: 1; transition: opacity 0.6s ease;
         }
 
-        /* --- 9. FOOTER --- */
+        .btn-wrapper:hover .btn-mega-giant::before { opacity: 1; }
+        .btn-wrapper:hover .btn-mega-giant { transform: scale(1.05); box-shadow: 0 30px 80px rgba(255, 215, 0, 0.6); }
+        .btn-wrapper:hover .btn-mega-giant span { color: var(--blue); }
+
+        /* --- 8. FOOTER --- */
         footer {
-            background: var(--dark); color: var(--white); padding: 60px 5%;
+            background: #030a1c; color: var(--white); padding: 60px 5%;
             display: flex; justify-content: space-between; align-items: center; border-top: 10px solid var(--blue);
+            position: relative; z-index: 10;
         }
         .footer-left, .footer-center, .footer-right { flex: 1; display: flex; }
         .footer-left { justify-content: flex-start; } .footer-center { justify-content: center; text-align: center; } .footer-right { justify-content: flex-end; }
@@ -376,15 +474,50 @@
         .footer-info h4 { color: var(--yellow); margin-bottom: 10px; font-size: 1.5rem; }
         .footer-info p { color: #ccc; }
 
-        /* LIGHTBOX */
+        /* --- LIGHTBOX --- */
         .lightbox {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 5000;
             display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.4s;
         }
         .lightbox.active { opacity: 1; pointer-events: auto; }
-        .lightbox-content { max-width: 90%; max-height: 90%; border-radius: 10px; }
-        .lightbox-close { position: absolute; top: 30px; right: 30px; color: white; font-size: 3rem; cursor: pointer; }
+        .lightbox-content { max-width: 90%; max-height: 90%; border-radius: 10px; box-shadow: 0 0 30px rgba(0,0,0,0.8); }
+        .lightbox-close { position: absolute; top: 30px; right: 30px; color: white; font-size: 3rem; cursor: pointer; transition: 0.3s; }
+        .lightbox-close:hover { color: var(--yellow); transform: scale(1.1); }
+
+        /* =========================================
+           ESTILOS PARA LOS EFECTOS DE LAS TARJETAS 
+           ========================================= */
+
+        .celeste-ripple {
+            position: absolute;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, rgba(0, 191, 255, 0.8) 0%, rgba(135, 206, 235, 0.5) 50%, rgba(0, 191, 255, 0) 80%);
+            transform: translate(-50%, -50%) scale(0);
+            animation: ripple-anim 0.8s ease-out forwards;
+            pointer-events: none;
+            z-index: 1; 
+        }
+
+        @keyframes ripple-anim {
+            to { transform: translate(-50%, -50%) scale(50); opacity: 0; }
+        }
+
+        /* Rayos Dorados (Modificado para crecer y achicarse por el mismo origen) */
+        .golden-ray {
+            position: absolute; 
+            height: 5px; /* Un poco más elegante */
+            width: 0px;
+            background: linear-gradient(90deg, rgba(255, 215, 0, 1) 0%, rgba(255, 165, 0, 0.8) 50%, rgba(255, 215, 0, 0) 100%);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.9), 0 0 30px rgba(255, 140, 0, 0.6);
+            border-radius: 10px;
+            transform-origin: left center;
+            z-index: -1; /* Z-Index negativo para quedar DEBAJO de la tarjeta, pero dentro de su contenedor grid */
+            pointer-events: none;
+            transition: width 0.4s cubic-bezier(0.25, 1, 0.2, 1);
+        }
 
         /* RESPONSIVE */
         @media (max-width: 992px) {
@@ -392,12 +525,13 @@
             .hero-text-side { order: 2; padding-left: 0; margin-top: -40px; text-align: center; align-items: center; }
             .hero-image-side { order: 1; justify-content: center; width: 100%; }
             .hero-img-container { max-width: 400px; }
-            .hero-name { font-size: 5rem; }
+            .hero-name { font-size: 7rem; }
             .hero-subtitle { font-size: 2rem; }
             .profile-card-inner { flex-direction: column; text-align: center; padding: 30px; }
+            .btn-mega-giant { font-size: 2rem; padding: 30px 60px; }
         }
         @media (max-width: 768px) {
-            .hero-name { font-size: 4rem; }
+            .hero-name { font-size: 5.6rem; }
             .btn-mega-giant { font-size: 1.5rem; padding: 20px 40px; }
             footer { flex-direction: column; gap: 30px; }
             .footer-left, .footer-center, .footer-right { width: 100%; justify-content: center; }
@@ -416,41 +550,39 @@
     <!-- 1. HEADER -->
     <header>
         <div class="header-logo">
-            <img src="img/insa.png" alt="Logo INSA" class="header-logo-img">
-            <h3 style="margin-left: 10px; color: var(--white);">INSA</h3>
+            <img src="img/insa.png" onerror="this.src='https://placehold.co/60x60/CE1126/FFFFFF?text=INSA'" alt="Logo INSA" class="header-logo-img">
+            <h3 class="header-text-format" style="margin-left: 10px;">INSA</h3>
         </div>
         <nav>
             <ul class="nav-menu">
-                <li><a href="#inicio">Inicio</a></li>
-                <li><a href="#perfil">Perfil</a></li>
-                <li><a href="#propuestas">Propuestas</a></li>
-                <li><a href="#plan">Plan</a></li>
-                <li><a href="#galeria">Galería</a></li>
+                <li><a class="header-text-format" href="#inicio">Inicio</a></li>
+                <li><a class="header-text-format" href="#perfil">Perfil</a></li>
+                <li><a class="header-text-format" href="#propuestas">Propuestas</a></li>
+                <li><a class="header-text-format" href="#plan">Plan</a></li>
+                <li><a class="header-text-format" href="#galeria">Galería</a></li>
             </ul>
         </nav>
         <div class="header-cta">
             <div class="candidate-thumb">
-                <img src="img/dustin_hero.png" alt="Dustin">
+                <img src="img/dustin_hero.png" onerror="this.src='https://placehold.co/45x45/0033A0/FFFFFF?text=D'" alt="Dustin">
             </div>
             <button class="btn-vote-sm">Vota por mí</button>
         </div>
     </header>
 
     <!-- WRAPPER OSCURO CONTINUO (HERO + PERFIL) -->
-    <div class="dark-section-wrapper">
+    <div class="dark-section-wrapper hero-wrapper star-bg-container">
         <div class="shape shape-1"></div>
         <div class="shape shape-2"></div>
 
         <!-- 2. HERO -->
         <section id="inicio" class="hero">
             <div class="hero-layout">
-                <!-- Lado Izquierdo: Foto Gigante Transparente -->
                 <div class="hero-image-side">
                     <div class="hero-img-container">
-                        <img src="img/dustin_hero.png" alt="Dustin Candidato">
+                        <img src="img/dustin_hero.png" onerror="this.src='https://placehold.co/500x700/transparent/FFFFFF?text=[Foto+de+Dustin]'" alt="Dustin Candidato">
                     </div>
                 </div>
-                <!-- Lado Derecho: Texto -->
                 <div class="hero-text-side">
                     <div class="hero-name gold-diagonal">DUSTIN</div>
                     <div class="hero-subtitle gold-diagonal">PERSONERO INSA 2026</div>
@@ -468,8 +600,8 @@
                             <h2 class="section-title slide-in-left" style="margin-bottom: 20px;">¿Quién es <span>Dustin</span>?</h2>
                             <p style="font-size: 1.1rem; line-height: 1.8;">
                                 Soy un estudiante que ha demostrado con hechos su compromiso con la excelencia, la disciplina y el servicio. Durante mis once años en el INSA he estado de manera consecutiva en el cuadro de honor desde kínder, he ganado dos veces las olimpiadas matemáticas y tres veces el concurso bíblico.
-                                <br> Deseo ser personero, para que, junto con mi compañera Valery Hernández, le brindemos todas nuestras cualidades, tiempo, y esfuerzo, para el mejoramiento del colegio y contribuir a la sana convivencia entre todos.
-                                <br> Estoy con los brazos abiertos a recibir sus ideas y aportes, y en mi personería, todos los estudiantes tendrán voz y participación.
+                                <br><br> Deseo ser personero, para que, junto con mi compañera Valery Hernández, le brindemos todas nuestras cualidades, tiempo, y esfuerzo, para el mejoramiento del colegio y contribuir a la sana convivencia entre todos.
+                                <br><br> Estoy con los brazos abiertos a recibir sus ideas y aportes, y en mi personería, todos los estudiantes tendrán voz y participación.
                             </p>
                             <br>
                             <div class="values-tags">
@@ -489,6 +621,9 @@
     <!-- 4. PROPUESTAS -->
     <section id="propuestas" class="section proposals-section">
         <h2 class="section-title slide-in-left">Mis <span>Propuestas</span></h2>
+        
+        <!-- Texto modificado de blanco a negro (dark) -->
+        <p class="click-hint slide-in-left delay-100">(Dale click a las propuestas.)</p>
 
         <div class="grid-container" id="main-proposals">
             <div class="card-wrapper reveal-up delay-100">
@@ -583,75 +718,77 @@
         <h2 class="section-title slide-in-left">Si votas por <span>Dustin...</span></h2>
         
         <div class="gallery-grid">
-            <div class="card-wrapper gallery-card-wrapper reveal-up delay-100">
-                <div class="gallery-item" onclick="openModal('img/interclases.jpg')">
-                    <img src="img/interclases.png" alt="Interclases">
+            <div class="gallery-card-wrapper reveal-up delay-100">
+                <div class="gallery-item" onclick="openModal(this.querySelector('img').src)">
+                    <img src="img/INTERCLASES.png" onerror="this.src='https://placehold.co/400x300/1a1a1a/FFFFFF?text=Interclases'" alt="Interclases">
                     <div class="gallery-overlay"><div class="gallery-text">INTERCLASES</div></div>
                 </div>
             </div>
-            <div class="card-wrapper gallery-card-wrapper reveal-up delay-200">
-                <div class="gallery-item" onclick="openModal('img/radio.jpg')">
-                    <img src="img/RADIO.png" alt="Radio INSA">
+            <div class="gallery-card-wrapper reveal-up delay-200">
+                <div class="gallery-item" onclick="openModal(this.querySelector('img').src)">
+                    <img src="img/RADIO.png" onerror="this.src='https://placehold.co/400x300/1a1a1a/FFFFFF?text=Radio'" alt="Radio INSA">
                     <div class="gallery-overlay"><div class="gallery-text">RADIO INSA</div></div>
                 </div>
             </div>
-            <div class="card-wrapper gallery-card-wrapper reveal-up delay-300">
-                <div class="gallery-item" onclick="openModal('img/arte.jpg')">
-                    <img src="img/GALERIA.png" alt="Galeria de Arte">
+            <div class="gallery-card-wrapper reveal-up delay-300">
+                <div class="gallery-item" onclick="openModal(this.querySelector('img').src)">
+                    <img src="img/GALERIA.png" onerror="this.src='https://placehold.co/400x300/1a1a1a/FFFFFF?text=Galeria'" alt="Galeria de Arte">
                     <div class="gallery-overlay"><div class="gallery-text">GALERÍA DE ARTE</div></div>
                 </div>
             </div>
-            <div class="card-wrapper gallery-card-wrapper reveal-up delay-100">
-                <div class="gallery-item" onclick="openModal('img/ciencia.jpg')">
-                    <img src="img/FERIA DE CIENCIAS.png" alt="Feria de Ciencias">
+            <div class="gallery-card-wrapper reveal-up delay-100">
+                <div class="gallery-item" onclick="openModal(this.querySelector('img').src)">
+                    <img src="img/FERIA DE CIENCIAS.png" onerror="this.src='https://placehold.co/400x300/1a1a1a/FFFFFF?text=Ciencia'" alt="Feria de Ciencias">
                     <div class="gallery-overlay"><div class="gallery-text">FERIA DE CIENCIAS</div></div>
                 </div>
             </div>
-            <div class="card-wrapper gallery-card-wrapper reveal-up delay-200">
-                <div class="gallery-item" onclick="openModal('img/juegos.jpg')">
-                    <img src="img/JUEGOS TRAD.png" alt="Juegos Tradicionales">
+            <div class="gallery-card-wrapper reveal-up delay-200">
+                <div class="gallery-item" onclick="openModal(this.querySelector('img').src)">
+                    <img src="img/JUEGOS TRAD.png" onerror="this.src='https://placehold.co/400x300/1a1a1a/FFFFFF?text=Juegos'" alt="Juegos Tradicionales">
                     <div class="gallery-overlay"><div class="gallery-text">JUEGOS TRADICIONALES</div></div>
                 </div>
             </div>
-            <div class="card-wrapper gallery-card-wrapper reveal-up delay-300">
-                <div class="gallery-item" onclick="openModal('img/concierto.jpg')">
-                    <img src="img/concierto.png" alt="Más Conciertos">
+            <div class="gallery-card-wrapper reveal-up delay-300">
+                <div class="gallery-item" onclick="openModal(this.querySelector('img').src)">
+                    <img src="img/concierto.png" onerror="this.src='https://placehold.co/400x300/1a1a1a/FFFFFF?text=Concierto'" alt="Más Conciertos">
                     <div class="gallery-overlay"><div class="gallery-text">MÁS CONCIERTOS</div></div>
                 </div>
             </div>
         </div>
 
-        <!-- TITULO Y MUCHO MÁS (SEPARADO) -->
         <h3 class="final-card-title reveal-up" style="margin-bottom: 0; padding-bottom: 40px;">Y MUCHO MÁS...<br>SI VOTAS POR DUSTIN</h3>
-
     </section>
 
     <!-- 7. FINAL CTA -->
-    <section id="vota" class="final-cta">
-        <div class="cta-content section">
-            <h2 class="section-title slide-in-left" style="text-align:center; margin-bottom: 40px;">¿LISTO PARA EL CAMBIO?</h2>
-            
-            <!-- TARJETA SORPRESAS (MOVIDA AQUÍ, SIN TEXTO) -->
-            <div class="final-card-container reveal-up delay-200">
-                 <div class="card-wrapper gallery-card-wrapper final-card-wrapper">
-                    <div class="gallery-item" onclick="openModal('img/sorpresa.jpg')">
-                        <img src="img/DUSTIN Y VAL FINAL FINAL.png" alt="Y mucho más">
-                        <div class="gallery-overlay"><div class="gallery-text"></div></div>
+    <div class="dark-section-wrapper final-wrapper star-bg-container" id="seccion-final">
+        <div class="shape shape-1" style="top: 0; right: -5%;"></div>
+        <div class="shape shape-2" style="bottom: 0; left: -5%;"></div>
+        
+        <section id="vota" class="final-cta">
+            <div class="cta-content section" style="padding: 0 10%;">
+                <h2 class="section-title slide-in-left" style="text-align:center; margin-bottom: 40px;">¿LISTO PARA EL CAMBIO?</h2>
+                
+                <div class="final-card-container reveal-up delay-200">
+                     <div class="gallery-card-wrapper final-card-wrapper">
+                        <div class="gallery-item" onclick="openModal(this.querySelector('img').src)">
+                            <img src="img/DUSTIN Y VAL FINAL FINAL.png" onerror="this.src='https://placehold.co/800x600/0033A0/FFFFFF?text=Dustin+y+Valery'" alt="Y mucho más">
+                            <div class="gallery-overlay"><div class="gallery-text"></div></div>
+                        </div>
                     </div>
                 </div>
+    
+                <div class="btn-wrapper">
+                    <button class="btn-mega-giant"><span>VOTA POR DUSTIN</span></button>
+                </div>
             </div>
+        </section>
+    </div>
 
-            <div class="btn-wrapper">
-                <button class="btn-mega-giant">VOTA POR DUSTIN</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- 9. FOOTER -->
+    <!-- 8. FOOTER -->
     <footer>
         <div class="footer-left">
             <div class="footer-logo-box">
-                <img src="img/insa.png" alt="Logo INSA">
+                <img src="img/insa.png" onerror="this.src='https://placehold.co/100x100/CE1126/FFFFFF?text=INSA'" alt="Logo INSA">
             </div>
         </div>
         <div class="footer-center">
@@ -665,13 +802,14 @@
         </div>
         <div class="footer-right">
             <div class="footer-photo-box">
-                <img src="img/dustin_hero.png" alt="Dustin">
+                <img src="img/dustin_hero.png" onerror="this.src='https://placehold.co/100x100/0033A0/FFFFFF?text=D'" alt="Dustin">
             </div>
         </div>
     </footer>
 
     <!-- JAVASCRIPT -->
     <script>
+        // ANIMACIONES DE SCROLL
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -683,6 +821,7 @@
 
         document.querySelectorAll('.reveal-up, .slide-in-left').forEach(el => observer.observe(el));
 
+        // EXPANSIÓN DE PROPUESTAS
         const toggleBtn = document.getElementById('toggleProposals');
         const hiddenProposals = document.getElementById('more-proposals');
 
@@ -699,11 +838,12 @@
             }
         });
 
+        // LIGHTBOX
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
 
         function openModal(imgSrc) {
-            lightboxImg.src = imgSrc;
+            lightboxImg.src = imgSrc; 
             lightbox.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -715,6 +855,246 @@
 
         lightbox.addEventListener('click', (e) => {
             if(e.target === lightbox) closeModal();
+        });
+
+        // ==========================================
+        // EFECTOS ANIMADOS (CLICK Y HOVER)
+        // ==========================================
+        const allCards = document.querySelectorAll('.card-wrapper');
+
+        // EFECTOS DE CLICK (Solo para Propuestas y Plan de Acción)
+        allCards.forEach(card => {
+            card.addEventListener('click', function(e) {
+                const section = this.closest('section');
+                if (!section) return;
+
+                if (section.id === 'propuestas') {
+                    if (typeof confetti !== 'undefined') {
+                        confetti({ particleCount: 80, spread: 70, colors: ['#0033A0', '#00BFFF', '#FFFFFF'], origin: { x: 0, y: 0.6 }, angle: 60, zIndex: 9999 });
+                        confetti({ particleCount: 80, spread: 70, colors: ['#0033A0', '#00BFFF', '#FFFFFF'], origin: { x: 1, y: 0.6 }, angle: 120, zIndex: 9999 });
+                    }
+                } 
+                else if (section.id === 'plan') {
+                    const innerCard = this.querySelector('.proposal-card-inner');
+                    if(innerCard) {
+                        const rect = innerCard.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+                        const ripple = document.createElement('span');
+                        ripple.classList.add('celeste-ripple');
+                        ripple.style.left = `${x}px`;
+                        ripple.style.top = `${y}px`;
+                        innerCard.appendChild(ripple);
+                        setTimeout(() => ripple.remove(), 800);
+                    }
+                }
+            });
+        });
+
+        // 3. RAYOS DORADOS EN HOVER MEJORADOS (Salen por detrás y regresan a su origen)
+        const rayCards = document.querySelectorAll('.gallery-card-wrapper, .final-card-wrapper');
+        
+        rayCards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                if (this.dataset.raying === 'true') return;
+                this.dataset.raying = 'true';
+                setTimeout(() => delete this.dataset.raying, 1200);
+
+                const container = this.parentElement; // El grid de la galería o el contenedor final
+                const cardRect = this.getBoundingClientRect();
+                const containerRect = container.getBoundingClientRect();
+                
+                // Calculamos el centro exacto de la tarjeta relativo a su contenedor
+                const centerX = (cardRect.left - containerRect.left) + (cardRect.width / 2);
+                const centerY = (cardRect.top - containerRect.top) + (cardRect.height / 2);
+                
+                const numRays = 12; 
+                const maxDistance = Math.max(window.innerWidth, window.innerHeight) * 0.7;
+                
+                for (let i = 0; i < numRays; i++) {
+                    const ray = document.createElement('div');
+                    ray.classList.add('golden-ray');
+                    container.appendChild(ray); // Se inyectan en el grid, detrás de las tarjetas (por el z-index -1 en css)
+
+                    const angle = (i * (360 / numRays)) + (Math.random() * 20 - 10);
+
+                    ray.style.left = `${centerX}px`;
+                    ray.style.top = `${centerY}px`;
+                    ray.style.transform = `translateY(-50%) rotate(${angle}deg)`;
+                    ray.style.width = '0px';
+
+                    ray.offsetHeight; // Forzar renderizado previo
+
+                    // 1. El rayo sale de la tarjeta
+                    ray.style.width = `${maxDistance}px`;
+
+                    // 2. El rayo se retrae de vuelta hacia la tarjeta
+                    setTimeout(() => {
+                        ray.style.width = '0px';
+                    }, 400); // Espera que termine de salir para recogerse
+
+                    // 3. Eliminar del DOM una vez termine
+                    setTimeout(() => ray.remove(), 800);
+                }
+            });
+        });
+
+        // ==========================================
+        // SISTEMA DE PARTÍCULAS (MÚLTIPLES SECCIONES)
+        // ==========================================
+        document.addEventListener("DOMContentLoaded", () => {
+            function initStarCanvasForWrapper(wrapper) {
+                const canvas = document.createElement('canvas');
+                canvas.style.position = 'absolute';
+                canvas.style.top = '0';
+                canvas.style.left = '0';
+                canvas.style.width = '100%';
+                canvas.style.height = '100%';
+                canvas.style.zIndex = '0'; 
+                canvas.style.pointerEvents = 'none'; 
+                wrapper.insertBefore(canvas, wrapper.firstChild);
+
+                const ctx = canvas.getContext('2d');
+                let particlesArray = [];
+                let mouse = { x: null, y: null, radius: 150 };
+
+                wrapper.addEventListener('mousemove', (e) => {
+                    const rect = canvas.getBoundingClientRect();
+                    mouse.x = e.clientX - rect.left;
+                    mouse.y = e.clientY - rect.top;
+                });
+
+                wrapper.addEventListener('mouseout', () => {
+                    mouse.x = null;
+                    mouse.y = null;
+                });
+
+                function resizeCanvas() {
+                    canvas.width = wrapper.offsetWidth;
+                    canvas.height = wrapper.offsetHeight;
+                }
+
+                window.addEventListener('resize', () => {
+                    resizeCanvas();
+                    initStars();
+                });
+
+                if(window.ResizeObserver) {
+                    new ResizeObserver(resizeCanvas).observe(wrapper);
+                }
+
+                class Particle {
+                    constructor(x, y, dx, dy, size, color) {
+                        this.x = x; this.y = y; this.dx = dx; this.dy = dy;
+                        this.size = size; this.baseSize = size; this.color = color;
+                        this.blinkRate = Math.random() * 0.005 + 0.001; 
+                        this.blinkOffset = Math.random() * Math.PI * 2;
+                        this.isSparkle = Math.random() > 0.8; 
+                    }
+                    draw() {
+                        ctx.beginPath();
+                        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                        ctx.fillStyle = this.color;
+                        ctx.shadowBlur = this.isSparkle ? 15 : 5;
+                        ctx.shadowColor = this.color;
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+                    }
+                    update() {
+                        if (this.x > canvas.width || this.x < 0) this.dx = -this.dx;
+                        if (this.y > canvas.height || this.y < 0) this.dy = -this.dy;
+                        this.x += this.dx;
+                        this.y += this.dy;
+
+                        let pulse = Math.sin(Date.now() * this.blinkRate + this.blinkOffset);
+                        if (this.isSparkle) {
+                            this.size = this.baseSize + pulse * 1.8; 
+                        } else {
+                            this.size = this.baseSize + pulse * 0.5; 
+                        }
+                        if(this.size < 0.1) this.size = 0.1;
+
+                        if (mouse.x) {
+                            let dx = mouse.x - this.x;
+                            let dy = mouse.y - this.y;
+                            let distance = Math.sqrt(dx * dx + dy * dy);
+                            if (distance < mouse.radius) {
+                                const forceDirectionX = dx / distance;
+                                const forceDirectionY = dy / distance;
+                                const force = (mouse.radius - distance) / mouse.radius;
+                                this.x -= forceDirectionX * force * 1.5;
+                                this.y -= forceDirectionY * force * 1.5;
+                            }
+                        }
+                        this.draw();
+                    }
+                }
+
+                function initStars() {
+                    particlesArray = [];
+                    resizeCanvas();
+                    let numberOfParticles = Math.floor((canvas.width * canvas.height) / 4500);
+                    if(numberOfParticles > 400) numberOfParticles = 400; 
+                    
+                    for (let i = 0; i < numberOfParticles; i++) {
+                        let size = (Math.random() * 2.5) + 0.5;
+                        let x = Math.random() * canvas.width;
+                        let y = Math.random() * canvas.height;
+                        let dx = (Math.random() - 0.5) * 0.5;
+                        let dy = (Math.random() - 0.5) * 0.5;
+                        let color = Math.random() > 0.8 ? '#FFD700' : '#FFFFFF'; 
+                        particlesArray.push(new Particle(x, y, dx, dy, size, color));
+                    }
+                }
+
+                function animateStars() {
+                    requestAnimationFrame(animateStars);
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    for (let i = 0; i < particlesArray.length; i++) {
+                        particlesArray[i].update();
+                    }
+                    connectStars();
+                }
+
+                function connectStars() {
+                    let opacityValue = 1;
+                    for (let a = 0; a < particlesArray.length; a++) {
+                        for (let b = a; b < particlesArray.length; b++) {
+                            let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x))
+                                         + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+                            if (distance < 9000) {
+                                opacityValue = 1 - (distance / 9000);
+                                ctx.strokeStyle = `rgba(130, 200, 255, ${opacityValue * 0.5})`; 
+                                ctx.lineWidth = 0.5;
+                                ctx.beginPath();
+                                ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                                ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                                ctx.stroke();
+                            }
+                        }
+                        if (mouse.x) {
+                            let distMouse = ((particlesArray[a].x - mouse.x) * (particlesArray[a].x - mouse.x))
+                                          + ((particlesArray[a].y - mouse.y) * (particlesArray[a].y - mouse.y));
+                            if (distMouse < 20000) {
+                                let mouseOpacity = 1 - (distMouse / 20000);
+                                ctx.strokeStyle = `rgba(255, 215, 0, ${mouseOpacity * 0.8})`;
+                                ctx.lineWidth = 1;
+                                ctx.beginPath();
+                                ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                                ctx.lineTo(mouse.x, mouse.y);
+                                ctx.stroke();
+                            }
+                        }
+                    }
+                }
+                
+                initStars();
+                animateStars();
+            }
+
+            document.querySelectorAll('.star-bg-container').forEach(wrapper => {
+                initStarCanvasForWrapper(wrapper);
+            });
         });
     </script>
 </body>
