@@ -262,7 +262,7 @@
         /* --- PERFIL --- */
         #perfil { background: transparent; }
         #perfil .section-title { color: var(--dark); text-shadow: 2px 4px 15px rgba(0,0,0,0.5); }
-        #perfil .section-title span { color: var(--yellow); }
+        #perfil .section-title span { color: var(--blue); }
         
         .animated-border-wrapper {
             position: relative; background: transparent; border-radius: var(--border-radius);
@@ -537,6 +537,59 @@
             .footer-left, .footer-center, .footer-right { width: 100%; justify-content: center; }
             .final-card-title { font-size: 2rem; }
         }
+        /* ==================================================
+   🚀 BLOQUE DE OPTIMIZACIÓN DE RENDIMIENTO
+   (NO CAMBIA NADA VISUAL)
+   ================================================== */
+
+/* Fuerza aceleración por GPU */
+.reveal-up,
+.slide-in-left,
+.card-wrapper,
+.gallery-card-wrapper,
+.hero-img-container,
+.btn-mega-giant,
+.hero-name,
+.hero-subtitle,
+.hero-motto,
+.proposal-card-inner,
+.gallery-item img,
+.shape,
+.gold-diagonal {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+/* Aisla animaciones pesadas para evitar repaint global */
+.shape,
+.animated-border-wrapper,
+.card-wrapper::before,
+.gallery-card-wrapper::before,
+.btn-wrapper::before {
+    contain: layout paint;
+}
+
+/* Evita que el grid completo se recalcule en hover */
+.grid-container {
+    contain: layout style;
+}
+
+/* Optimiza mask-image del hero */
+.hero-img-container img {
+    will-change: transform;
+}
+
+/* Optimiza blur del header */
+header {
+    will-change: backdrop-filter;
+    transform: translateZ(0);
+}
+
+/* Lazy render automático de imágenes */
+img {
+    content-visibility: auto;
+}
     </style>
 </head>
 <body>
@@ -550,7 +603,7 @@
     <!-- 1. HEADER -->
     <header>
         <div class="header-logo">
-            <img src="img/insa.png" onerror="this.src='https://placehold.co/60x60/CE1126/FFFFFF?text=INSA'" alt="Logo INSA" class="header-logo-img">
+            <img src="img/insa.png" loading="lazy" onerror="this.src='https://placehold.co/60x60/CE1126/FFFFFF?text=INSA'" alt="Logo INSA" class="header-logo-img">
             <h3 class="header-text-format" style="margin-left: 10px;">INSA</h3>
         </div>
         <nav>
@@ -564,7 +617,7 @@
         </nav>
         <div class="header-cta">
             <div class="candidate-thumb">
-                <img src="img/dustin_hero.png" onerror="this.src='https://placehold.co/45x45/0033A0/FFFFFF?text=D'" alt="Dustin">
+                <img src="img/dustin_hero.png"  loading="lazy" onerror="this.src='https://placehold.co/45x45/0033A0/FFFFFF?text=D'" alt="Dustin">
             </div>
             <button class="btn-vote-sm">Vota por mí</button>
         </div>
@@ -580,7 +633,7 @@
             <div class="hero-layout">
                 <div class="hero-image-side">
                     <div class="hero-img-container">
-                        <img src="img/dustin_hero.png" onerror="this.src='https://placehold.co/500x700/transparent/FFFFFF?text=[Foto+de+Dustin]'" alt="Dustin Candidato">
+                        <img src="img/dustin_hero.png"  loading="lazy"  onerror="this.src='https://placehold.co/500x700/transparent/FFFFFF?text=[Foto+de+Dustin]'" alt="Dustin Candidato">
                     </div>
                 </div>
                 <div class="hero-text-side">
@@ -720,37 +773,37 @@
         <div class="gallery-grid">
             <div class="gallery-card-wrapper reveal-up delay-100">
                 <div class="gallery-item" onclick="openModal(this.querySelector('img').src)">
-                    <img src="img/interclases.png" onerror="this.src='https://placehold.co/400x300/1a1a1a/FFFFFF?text=Interclases'" alt="Interclases">
+                    <img src="img/interclases.png"  loading="lazy" onerror="this.src='https://placehold.co/400x300/1a1a1a/FFFFFF?text=Interclases'" alt="Interclases">
                     <div class="gallery-overlay"><div class="gallery-text">INTERCLASES</div></div>
                 </div>
             </div>
             <div class="gallery-card-wrapper reveal-up delay-200">
                 <div class="gallery-item" onclick="openModal(this.querySelector('img').src)">
-                    <img src="img/RADIO.png" onerror="this.src='https://placehold.co/400x300/1a1a1a/FFFFFF?text=Radio'" alt="Radio INSA">
+                    <img src="img/RADIO.png"  loading="lazy"  onerror="this.src='https://placehold.co/400x300/1a1a1a/FFFFFF?text=Radio'" alt="Radio INSA">
                     <div class="gallery-overlay"><div class="gallery-text">RADIO INSA</div></div>
                 </div>
             </div>
             <div class="gallery-card-wrapper reveal-up delay-300">
                 <div class="gallery-item" onclick="openModal(this.querySelector('img').src)">
-                    <img src="img/GALERIA.png" onerror="this.src='https://placehold.co/400x300/1a1a1a/FFFFFF?text=Galeria'" alt="Galeria de Arte">
+                    <img src="img/GALERIA.png" loading="lazy"  onerror="this.src='https://placehold.co/400x300/1a1a1a/FFFFFF?text=Galeria'" alt="Galeria de Arte">
                     <div class="gallery-overlay"><div class="gallery-text">GALERÍA DE ARTE</div></div>
                 </div>
             </div>
             <div class="gallery-card-wrapper reveal-up delay-100">
                 <div class="gallery-item" onclick="openModal(this.querySelector('img').src)">
-                    <img src="img/FERIA DE CIENCIAS.png" onerror="this.src='https://placehold.co/400x300/1a1a1a/FFFFFF?text=Ciencia'" alt="Feria de Ciencias">
+                    <img src="img/FERIA DE CIENCIAS.png" loading="lazy"  onerror="this.src='https://placehold.co/400x300/1a1a1a/FFFFFF?text=Ciencia'" alt="Feria de Ciencias">
                     <div class="gallery-overlay"><div class="gallery-text">FERIA DE CIENCIAS</div></div>
                 </div>
             </div>
             <div class="gallery-card-wrapper reveal-up delay-200">
                 <div class="gallery-item" onclick="openModal(this.querySelector('img').src)">
-                    <img src="img/JUEGOS TRAD.png" onerror="this.src='https://placehold.co/400x300/1a1a1a/FFFFFF?text=Juegos'" alt="Juegos Tradicionales">
+                    <img src="img/JUEGOS TRAD.png" loading="lazy"  onerror="this.src='https://placehold.co/400x300/1a1a1a/FFFFFF?text=Juegos'" alt="Juegos Tradicionales">
                     <div class="gallery-overlay"><div class="gallery-text">JUEGOS TRADICIONALES</div></div>
                 </div>
             </div>
             <div class="gallery-card-wrapper reveal-up delay-300">
                 <div class="gallery-item" onclick="openModal(this.querySelector('img').src)">
-                    <img src="img/concierto.png" onerror="this.src='https://placehold.co/400x300/1a1a1a/FFFFFF?text=Concierto'" alt="Más Conciertos">
+                    <img src="img/concierto.png" loading="lazy"  onerror="this.src='https://placehold.co/400x300/1a1a1a/FFFFFF?text=Concierto'" alt="Más Conciertos">
                     <div class="gallery-overlay"><div class="gallery-text">MÁS CONCIERTOS</div></div>
                 </div>
             </div>
@@ -771,7 +824,7 @@
                 <div class="final-card-container reveal-up delay-200">
                      <div class="gallery-card-wrapper final-card-wrapper">
                         <div class="gallery-item" onclick="openModal(this.querySelector('img').src)">
-                            <img src="img/DUSTIN Y VAL FINAL FINAL.png" onerror="this.src='https://placehold.co/800x600/0033A0/FFFFFF?text=Dustin+y+Valery'" alt="Y mucho más">
+                            <img src="img/DUSTIN Y VAL FINAL FINAL.png" loading="lazy"  onerror="this.src='https://placehold.co/800x600/0033A0/FFFFFF?text=Dustin+y+Valery'" alt="Y mucho más">
                             <div class="gallery-overlay"><div class="gallery-text"></div></div>
                         </div>
                     </div>
